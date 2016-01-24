@@ -70,6 +70,7 @@ Resources and useful links
 - PythonProgramming.net: `Reading CSV Files in Python <https://pythonprogramming.net/reading-csv-files-python-3/>`_
 - Python Software Foundation: `CSV Documentation <https://docs.python.org/3/library/csv.html>`_
 - Python Software Foundation: `Building and Distributing Packages with Setuptools <https://pythonhosted.org/setuptools/setuptools.html>`_
+- CSVKit: `Documentation <https://csvkit.readthedocs.org/en/0.9.1/>`_
 - OpenPyXL: `Documentation <https://openpyxl.readthedocs.org/en/2.3.3/>`_
 - Stackoverflow (Various): `Custom exceptions in Python <https://stackoverflow.com/questions/1319615/proper-way-to-declare-custom-exceptions-in-modern-python>`_
 - Six: `Documentation <https://pythonhosted.org/six/>`_
