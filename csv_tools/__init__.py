@@ -120,13 +120,13 @@ class CSVToolsDictWriter(csv.DictWriter):
 
 def reader(*args, **kwargs):
     """
-    A drop-in replacement for Python's :func:`csv.reader` that leverages :class:`csvkit.py3.CSVToolsReader`.
+    A drop-in replacement for Python's :func:`csv.reader`.t
     """
     return CSVToolsReader(*args, **kwargs)
 
 
 def writer(*args, **kwargs):
     """
-    A drop-in replacement for Python's :func:`csv.writer` that leverages :class:`csvkit.py3.CSVToolsWriter`.
+    A drop-in replacement for Python's :func:`csv.writer`.
     """
     return CSVToolsWriter(*args, **kwargs)
