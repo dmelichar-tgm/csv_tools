@@ -50,6 +50,10 @@ Convert Excel to CSV::
 
     convert data.xls > data.csv
 
+Convert a badly formatted CSV to a well formated CSV::
+
+    convert data.csv
+
 Query with SQL::
 
     insert --query "select snr from data where bezirk.name = 'Donaustadt'" test_data.csv > snr_22.csv
