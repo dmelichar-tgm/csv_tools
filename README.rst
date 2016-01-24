@@ -87,8 +87,4 @@ Die Aufgabenstellung: Erstellen Sie ein einfaches Beispiel anhand der Wiener Gem
 - Einlesen eines CSV-Files (unterschiedlicher Dialekt) und an vorhandene Daten im Hauptspeicher anhängen
 - Ausgeben von eingelesen Daten in ein CSV-File (unterschiedliche Dialekte)
 
-<<<<<<< be1d87b61a25d6a7724dc6d2ebeed1d23cfabe70
 Viel Erfolg!
-=======
-Viel Erfolg!
->>>>>>> Initial commit
