@@ -1,3 +1,10 @@
+
+# Required due to VirtualBox Guest Addition probles caused by
+# different Versions of VirtualBox
+unless Vagrant.has_plugin?("vagrant-vbguest")
+    raise Vagrant::Errors::VagrantError.new, "Plugin missing: vagrant-vbguest - please install via vagrant plugin install"
+end
+
 Vagrant.configure("2") do |config|
   config.vm.provision :shell, :path => "./install-jenkins.sh"
   config.vm.provider "virtualbox" do |v|
