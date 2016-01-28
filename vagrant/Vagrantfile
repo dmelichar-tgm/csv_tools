@@ -6,7 +6,6 @@ unless Vagrant.has_plugin?("vagrant-vbguest")
 end
 
 Vagrant.configure("2") do |config|
-  config.vm.provision :shell, :path => "./install-jenkins.sh"
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "2024"]
   end
@@ -19,4 +18,10 @@ Vagrant.configure("2") do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network :forwarded_port, guest: 80, host: 8080
   #config.vm.network :hostonly, "33.33.33.10"
+  
+  config.vm.synced_folder "/Desktop/Debian VMware/Wien-Wahl/csv_tools", "/home/vagrant/CSV-Tools"
+  config.vm.synced_folder "~/.virtualenvs", "/home/vagrant/.virtualenvs"
+
+  # Install project dependicies
+  config.vm.provision :shell, :path => "./install.sh"
 end
