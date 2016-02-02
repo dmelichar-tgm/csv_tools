@@ -2,7 +2,7 @@
 
 sudo apt-get update
 
-sudo apt-get -y --force-yes install git-core python python-pip python-mock python-nose python-coverage pylint
+sudo apt-get -y --force-yes install git-core python3 python3-pip python-mock python-nose python-coverage pylint
 
 sudo sh -c 'echo "APT::Cache-Limit "100000000";" >> /etc/apt/apt.conf.d/70debconf'
 
@@ -33,26 +33,11 @@ sudo a2ensite jenkins.conf
 sudo sh -c 'echo "ServerName JenkinsCI" >> /etc/apache2/conf.d/jenkins.conf' && sudo service apache2 restart
 sudo apache2ctl restart
 
-VIRTUAL_ENVS_PATH='/home/vagrant/.virtualenvs/csv_tools/bin/'
-if [ -d "$VIRTUAL_ENVS_PATH" ]; then 
-    if [ -L "$VIRTUAL_ENVS_PATH" ]; then
-        echo 'Using Virtual Env for CSV-Tools..'
-        source home/vagrant/.virtualenvs/csv_tools/bin/activate
-    else
-        echo 'A shared folder to your Virtual Environments has not been established. Check in the Vagrantfile if the right path is set.'
-    fi
-else 
-    echo 'A shared folder to your Virtual Environments has not been established. Check in the Vagrantfile if the right path is set'
-fi
-
 CSV_TOOLS_PATH='/home/vagrant/CSV-Tools'
 if [ -d "$CSV_TOOLS_PATH" ]; then 
-    if [ -L "$CSV_TOOLS_PATH" ]; then
-        python "$part1/"setup.py install
-        pip install -r requirements.txt
-    else
-        echo 'A shared folder to your Virtual Environments has not been established. Check in the Vagrantfile if the right path is set.'
-    fi
+    cd "$CSV_TOOLS_PATH"
+    sudo python3 setup.py install
+    sudo pip3 install -r requirements.txt
 else 
-    echo 'A shared folder to your Virtual Environments has not been established. Check in the Vagrantfile if the right path is set'
+    echo 'The required shared folder to the project root has not been established. Check in the Vagrantfile if the right path is set'
 fi
