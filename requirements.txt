@@ -16,3 +16,4 @@ snowballstemmer==1.2.1
 Sphinx==1.3.4
 sphinx-rtd-theme==0.1.9
 SQLAlchemy==1.0.11
+agate==1.2.0

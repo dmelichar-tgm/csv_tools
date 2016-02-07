@@ -12,6 +12,8 @@ Requirements
 
 You will need a functional **Python3** installation. Using a `VirtualEnv <http://docs.python-guide.org/en/latest/dev/virtualenvs/>`_ is never wrong.
 
+For the Jenkins part, you'll need a functional Vagrant installation.
+
 
 Installation
 ############
@@ -47,25 +49,35 @@ For a more detailed documentation, see the doc folder with the Sphinx documentat
 
 **Some examples**
 
-Convert Excel to CSV::
+Convert Excel to CSV:
 
     convert data.xls > data.csv
 
-Convert a badly formatted CSV to a well formated CSV::
+Convert a badly formatted CSV to a well formated CSV:
 
     convert data.csv
 
-Query with SQL::
+Query with SQL:
 
     insert --query "select snr from data where bezirk.name = 'Donaustadt'" test_data.csv > snr_22.csv
 
-Import into PostgreSQL::
+Import into PostgreSQL:
 
 	insert --db postgresql://wadmin:password@localhost/wien_wahl  --insert examples/test_data.csv 
 
-Print a CSV::
+Print a CSV:
 	
 	lookat examples/test_data.csv
+
+
+Virtual Environement (with Jenkins)
+###################################
+
+Go to the vagrant directory and type:
+	
+	vagrant up
+
+This will install and configure the machine. After that the machine will be available at **127.0.0.0:8080**.
 
 
 Resources and useful links
@@ -79,6 +91,8 @@ Resources and useful links
 - OpenPyXL: `Documentation <https://openpyxl.readthedocs.org/en/2.3.3/>`_
 - Stackoverflow (Various): `Custom exceptions in Python <https://stackoverflow.com/questions/1319615/proper-way-to-declare-custom-exceptions-in-modern-python>`_
 - Six: `Documentation <https://pythonhosted.org/six/>`_
+- Jenkins: `Wiki <https://wiki.jenkins-ci.org/display/JENKINS/Home>`_
+- bhfsteve: `Automated python unit testing, code coverage and code quality analysis with Jenkins <http://bhfsteve.blogspot.co.at/2012/04/automated-python-unit-testing-code.html>`_
 
 
 Aufgabenstellung #1 (A08 - Python und CSV)

@@ -1,4 +1,3 @@
-
 # Required due to VirtualBox Guest Addition probles caused by
 # different Versions of VirtualBox
 unless Vagrant.has_plugin?("vagrant-vbguest")
@@ -6,6 +5,9 @@ unless Vagrant.has_plugin?("vagrant-vbguest")
 end
 
 Vagrant.configure("2") do |config|
+  
+  # Configures how much memory goes to the machine
+  # This can be adjusted by editing the 2024 to a different value (more than 512)
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "2024"]
   end
@@ -17,8 +19,8 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network :forwarded_port, guest: 80, host: 8080
-  #config.vm.network :hostonly, "33.33.33.10"
 
+  # Makes the entire CSV-Tools directory available as is
   config.vm.synced_folder "../.", "/home/vagrant/CSV-Tools"
 
   # Install project dependicies
