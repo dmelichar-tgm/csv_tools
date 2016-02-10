@@ -5,18 +5,20 @@ Ich bin nach mehr als 10h mit fast 150 Jenkins builds, wobei fast alle eine unte
 
 Hier ist der Output der Jenkins Build Error Console des letzten Builds. Man beachte, dass ein chmod durchgeführt wird, es aber trotzdem einen Permission Error gibt.
 
-\begin{figure}[h!]
+\begin{figure}[!h]
 	\caption{Jenkins Console Error}
 	\centering
-	\includegraphics[width=\textwidth]{images/jenkins_consoleError.png}
+	\includegraphics[width=0.6\textwidth]{images/jenkins_consoleError.png}
 \end{figure}
 
-Führe ich aber das Buildskript 1:1 zu aus wie ich es konfiguriert habe, bekomm ich alle benötigten files ohne jegliche error meldungen zurück.
+\clearpage
 
-\begin{figure}[h!]
-	\caption{Jenkins Buld script}
+Nach dem Herr Prof. Dolezal mir mit meinem Build Script geholfen hat konnte ich nun einen \textit{SUCCESSFUL} build erstellen und mit dem Tutorial weiter machen. Die Addition des \textit{set +e} hat mich auf den Fehler gebracht. Ich bin dann letzendlich auf folgendes Build Script gekommen mit folgenden Output der Post Builds.
+
+\lstinputlisting[caption=build.sh, style=Bash]{../../vagrant/jenkins/build.sh}
+
+\begin{figure}[!h]
+	\caption{Jenkins Output}
 	\centering
-	\includegraphics[width=\textwidth]{images/vagrant_script.png}
+	\includegraphics[width=0.8\textwidth]{images/jenkins_Output1.png}
 \end{figure}
-
-Es ergibt für mich einfach keinen Sinn mehr.

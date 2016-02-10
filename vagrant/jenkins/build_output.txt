@@ -1,0 +1,487 @@
+Started by user anonymous
+Building in workspace /var/lib/jenkins/jobs/CSV-Tools/workspace
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url /home/vagrant/CSV-Tools # timeout=10
+Fetching upstream changes from /home/vagrant/CSV-Tools
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress /home/vagrant/CSV-Tools +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+ > git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 2f4d1a14fee682920ca4941826dadf94a9d711c0 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 2f4d1a14fee682920ca4941826dadf94a9d711c0
+ > git rev-list 2f4d1a14fee682920ca4941826dadf94a9d711c0 # timeout=10
+[workspace] $ /usr/bin/env bash /tmp/hudson5260587873088596073.sh
+
+Name                           Stmts   Miss  Cover   Missing
+------------------------------------------------------------
+csv_tools.py                      69     39    43%   23, 26, 29, 33, 37, 46-52, 55-60, 63-70, 73-74, 90-96, 99-104, 107-114, 117-118, 125, 132
+csv_tools/cli.py                 235    195    17%   37-41, 53-58, 61-65, 68, 71-73, 76-80, 92-122, 129, 136, 145-179, 185-207, 213-241, 247-252, 258-273, 279-296, 305-326, 336-409
+csv_tools/convert.py              40     26    35%   38-50, 56-77
+csv_tools/convert/bad_csv.py      18      6    67%   35-42
+csv_tools/convert/xlsx.py         61     44    28%   40-50, 60-64, 78-128
+csv_tools/exceptions.py           52     18    65%   28, 31, 34, 44, 68-70, 79-80, 84, 104-108, 118-120
+csv_tools/headers.py              10      1    90%   18
+csv_tools/services.py              8      0   100%   
+csv_tools/sniffer.py              17      5    71%   33-38
+csv_tools/table.py               158    113    28%   52-64, 67, 73, 79-88, 94, 102-110, 120-121, 124, 130, 136-137, 140-148, 152-155, 159-162, 166-170, 174-175, 179, 183, 186, 189-194, 200-208, 221-277, 284-297, 303-309
+csv_tools/typeinference.py       167    145    13%   54-221, 229-265
+------------------------------------------------------------
+TOTAL                            835    592    29%   
+----------------------------------------------------------------------
+Ran 0 tests in 0.219s
+
+OK
+************* Module csv_tools
+csv_tools/__init__.py:112: [C0301(line-too-long), ] Line too long (119/100)
+csv_tools/__init__.py:1: [C0111(missing-docstring), ] Missing module docstring
+csv_tools/__init__.py:32: [C0111(missing-docstring), CSVToolsReader.dialect] Missing method docstring
+csv_tools/__init__.py:36: [C0111(missing-docstring), CSVToolsReader.line_num] Missing method docstring
+csv_tools/__init__.py:62: [C0111(missing-docstring), CSVToolsWriter.writerow] Missing method docstring
+csv_tools/__init__.py:72: [C0111(missing-docstring), CSVToolsWriter.writerows] Missing method docstring
+csv_tools/__init__.py:77: [R0903(too-few-public-methods), CSVToolsDictReader] Too few public methods (1/2)
+csv_tools/__init__.py:112: [E1101(no-member), CSVToolsDictWriter.writerow] Instance of 'list' has no 'items' member
+csv_tools/__init__.py:112: [R0204(redefined-variable-type), CSVToolsDictWriter.writerow] Redefinition of row type from list to dict
+************* Module csv_tools.cli
+csv_tools/cli.py:129: [C0301(line-too-long), ] Line too long (104/100)
+csv_tools/cli.py:140: [C0301(line-too-long), ] Line too long (114/100)
+csv_tools/cli.py:141: [C0301(line-too-long), ] Line too long (115/100)
+csv_tools/cli.py:142: [C0301(line-too-long), ] Line too long (115/100)
+csv_tools/cli.py:149: [C0301(line-too-long), ] Line too long (161/100)
+csv_tools/cli.py:151: [C0301(line-too-long), ] Line too long (130/100)
+csv_tools/cli.py:153: [C0301(line-too-long), ] Line too long (171/100)
+csv_tools/cli.py:155: [C0301(line-too-long), ] Line too long (141/100)
+csv_tools/cli.py:157: [C0301(line-too-long), ] Line too long (229/100)
+csv_tools/cli.py:159: [C0301(line-too-long), ] Line too long (175/100)
+csv_tools/cli.py:161: [C0301(line-too-long), ] Line too long (233/100)
+csv_tools/cli.py:163: [C0301(line-too-long), ] Line too long (158/100)
+csv_tools/cli.py:165: [C0301(line-too-long), ] Line too long (142/100)
+csv_tools/cli.py:167: [C0301(line-too-long), ] Line too long (191/100)
+csv_tools/cli.py:169: [C0301(line-too-long), ] Line too long (196/100)
+csv_tools/cli.py:169: [C0326(bad-whitespace), ] Exactly one space required after comma
+            self.argparser.add_argument('-H', '--no-header-row', dest='no_header_row', action='store_true',help='Specifies that the input CSV file has no header row. Will create default headers.')
+                                                                                                          ^
+csv_tools/cli.py:171: [C0301(line-too-long), ] Line too long (148/100)
+csv_tools/cli.py:175: [C0301(line-too-long), ] Line too long (227/100)
+csv_tools/cli.py:179: [C0301(line-too-long), ] Line too long (212/100)
+csv_tools/cli.py:211: [C0301(line-too-long), ] Line too long (119/100)
+csv_tools/cli.py:245: [C0301(line-too-long), ] Line too long (117/100)
+csv_tools/cli.py:256: [C0301(line-too-long), ] Line too long (101/100)
+csv_tools/cli.py:269: [C0301(line-too-long), ] Line too long (177/100)
+csv_tools/cli.py:277: [C0301(line-too-long), ] Line too long (102/100)
+csv_tools/cli.py:280: [C0301(line-too-long), ] Line too long (103/100)
+csv_tools/cli.py:323: [C0301(line-too-long), ] Line too long (105/100)
+csv_tools/cli.py:324: [C0330(bad-continuation), ] Wrong hanging indentation (add 4 spaces).
+            c, column_names[-1], len(column_names) - 1))
+            ^   |
+csv_tools/cli.py:332: [C0301(line-too-long), ] Line too long (104/100)
+csv_tools/cli.py:371: [C0301(line-too-long), ] Line too long (105/100)
+csv_tools/cli.py:404: [C0301(line-too-long), ] Line too long (105/100)
+csv_tools/cli.py:36: [C0103(invalid-name), lazy_opener] Invalid argument name "fn"
+csv_tools/cli.py:36: [C0111(missing-docstring), lazy_opener] Missing function docstring
+csv_tools/cli.py:37: [C0111(missing-docstring), lazy_opener.wrapped] Missing function docstring
+csv_tools/cli.py:38: [W0212(protected-access), lazy_opener.wrapped] Access to a protected member _lazy_open of a client class
+csv_tools/cli.py:54: [C0103(invalid-name), LazyFile.__init__] Invalid attribute name "f"
+csv_tools/cli.py:70: [C0111(missing-docstring), LazyFile.close] Missing method docstring
+csv_tools/cli.py:83: [C0111(missing-docstring), CSVToolsUtility] Missing class docstring
+csv_tools/cli.py:138: [R0912(too-many-branches), CSVToolsUtility._init_common_parser] Too many branches (14/12)
+csv_tools/cli.py:193: [C0103(invalid-name), CSVToolsUtility._open_input_file] Invalid variable name "f"
+csv_tools/cli.py:198: [C0103(invalid-name), CSVToolsUtility._open_input_file] Invalid variable name "f"
+csv_tools/cli.py:201: [C0103(invalid-name), CSVToolsUtility._open_input_file] Invalid variable name "f"
+csv_tools/cli.py:203: [C0103(invalid-name), CSVToolsUtility._open_input_file] Invalid variable name "f"
+csv_tools/cli.py:205: [C0103(invalid-name), CSVToolsUtility._open_input_file] Invalid variable name "f"
+csv_tools/cli.py:261: [C0103(invalid-name), CSVToolsUtility._install_exception_handler.handler] Invalid argument name "t"
+csv_tools/cli.py:261: [C0111(missing-docstring), CSVToolsUtility._install_exception_handler.handler] Missing function docstring
+csv_tools/cli.py:282: [C0103(invalid-name), CSVToolsUtility.print_column_names] Invalid variable name "f"
+csv_tools/cli.py:287: [W0702(bare-except), CSVToolsUtility.print_column_names] No exception type(s) specified
+csv_tools/cli.py:293: [C0103(invalid-name), CSVToolsUtility.print_column_names] Invalid variable name "c"
+csv_tools/cli.py:299: [C0103(invalid-name), match_column_identifier] Invalid argument name "c"
+csv_tools/cli.py:346: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "c"
+csv_tools/cli.py:347: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "c"
+csv_tools/cli.py:353: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:353: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:355: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:355: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:361: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:363: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:365: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:367: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:373: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "x"
+csv_tools/cli.py:379: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "c"
+csv_tools/cli.py:380: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "c"
+csv_tools/cli.py:386: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:386: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:388: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:388: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:394: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:396: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "a"
+csv_tools/cli.py:398: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:400: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "b"
+csv_tools/cli.py:406: [C0103(invalid-name), parse_column_identifiers] Invalid variable name "x"
+csv_tools/cli.py:340: [R0204(redefined-variable-type), parse_column_identifiers] Redefinition of columns type from list to range
+csv_tools/cli.py:329: [R0912(too-many-branches), parse_column_identifiers] Too many branches (26/12)
+csv_tools/cli.py:329: [R0915(too-many-statements), parse_column_identifiers] Too many statements (52/50)
+************* Module csv_tools.exceptions
+csv_tools/exceptions.py:44: [C0301(line-too-long), ] Line too long (147/100)
+csv_tools/exceptions.py:27: [W0231(super-init-not-called), CustomException.__init__] __init__ method from base class 'Exception' is not called
+csv_tools/exceptions.py:43: [W0231(super-init-not-called), FieldSizeLimitError.__init__] __init__ method from base class 'CustomException' is not called
+csv_tools/exceptions.py:83: [C0111(missing-docstring), LengthMismatchError.length] Missing method docstring
+csv_tools/exceptions.py:94: [C0111(missing-docstring), NonUniqueKeyColumnException] Missing class docstring
+************* Module csv_tools.headers
+csv_tools/headers.py:18: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/headers.py:1: [C0111(missing-docstring), ] Missing module docstring
+csv_tools/headers.py:14: [C0103(invalid-name), make_default_headers] Invalid argument name "n"
+************* Module csv_tools.sniffer
+csv_tools/sniffer.py:35: [W0702(bare-except), sniff_dialect] No exception type(s) specified
+************* Module csv_tools.sql
+csv_tools/sql.py:118: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/sql.py:35: [C0103(invalid-name), ] Invalid constant name "NoneType"
+csv_tools/sql.py:88: [C0111(missing-docstring), get_connection] Missing function docstring
+csv_tools/sql.py:94: [W0613(unused-argument), make_table] Unused argument 'name'
+csv_tools/sql.py:118: [E1120(no-value-for-parameter), make_create_table_statement] No value for argument 'default' in method call
+************* Module csv_tools.table
+csv_tools/table.py:45: [C0301(line-too-long), ] Line too long (104/100)
+csv_tools/table.py:49: [C0301(line-too-long), ] Line too long (120/100)
+csv_tools/table.py:77: [C0301(line-too-long), ] Line too long (146/100)
+csv_tools/table.py:211: [C0301(line-too-long), ] Line too long (171/100)
+csv_tools/table.py:275: [C0301(line-too-long), ] Line too long (122/100)
+csv_tools/table.py:290: [C0301(line-too-long), ] Line too long (104/100)
+csv_tools/table.py:309: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/table.py:35: [R0903(too-few-public-methods), InvalidType] Too few public methods (0/2)
+csv_tools/table.py:45: [R0913(too-many-arguments), Column.__init__] Too many arguments (7/5)
+csv_tools/table.py:53: [C0103(invalid-name), Column.__init__] Invalid variable name "t"
+csv_tools/table.py:56: [C0103(invalid-name), Column.__init__] Invalid variable name "t"
+csv_tools/table.py:59: [C0103(invalid-name), Column.__init__] Invalid variable name "t"
+csv_tools/table.py:79: [C0103(invalid-name), Column.__getitem__] Invalid variable name "l"
+csv_tools/table.py:102: [C0103(invalid-name), Column.max_length] Invalid variable name "l"
+csv_tools/table.py:105: [C0103(invalid-name), Column.max_length] Invalid variable name "l"
+csv_tools/table.py:108: [C0103(invalid-name), Column.max_length] Invalid variable name "l"
+csv_tools/table.py:116: [W0102(dangerous-default-value), Table.__init__] Dangerous default value [] as argument
+csv_tools/table.py:136: [C0103(invalid-name), Table._reindex_columns] Invalid variable name "c"
+csv_tools/table.py:145: [W0702(bare-except), Table._deduplicate_column_name] No exception type(s) specified
+csv_tools/table.py:166: [C0103(invalid-name), Table.extend] Invalid variable name "c"
+csv_tools/table.py:185: [C0111(missing-docstring), Table.headers] Missing method docstring
+csv_tools/table.py:188: [C0111(missing-docstring), Table.count_rows] Missing method docstring
+csv_tools/table.py:211: [C0103(invalid-name), Table.from_csv] Invalid argument name "f"
+csv_tools/table.py:211: [R0913(too-many-arguments), Table.from_csv] Too many arguments (9/5)
+csv_tools/table.py:211: [R0914(too-many-locals), Table.from_csv] Too many local variables (21/15)
+csv_tools/table.py:257: [C0103(invalid-name), Table.from_csv] Invalid variable name "d"
+csv_tools/table.py:264: [W0631(undefined-loop-variable), Table.from_csv] Using possibly undefined loop variable 'j'
+csv_tools/table.py:274: [C0103(invalid-name), Table.from_csv] Invalid variable name "c"
+csv_tools/table.py:257: [W0612(unused-variable), Table.from_csv] Unused variable 'd'
+csv_tools/table.py:242: [R0204(redefined-variable-type), Table.from_csv] Redefinition of rows type from csv_tools.CSVToolsReader to itertools.chain
+csv_tools/table.py:287: [C0103(invalid-name), Table.to_rows] Invalid variable name "c"
+************* Module csv_tools.typeinference
+csv_tools/typeinference.py:137: [C0326(bad-whitespace), ] Exactly one space required before assignment
+                float_x  = float(replace(x, ',', ''))
+                         ^
+csv_tools/typeinference.py:185: [C0301(line-too-long), ] Line too long (103/100)
+csv_tools/typeinference.py:192: [C0301(line-too-long), ] Line too long (158/100)
+csv_tools/typeinference.py:200: [C0301(line-too-long), ] Line too long (160/100)
+csv_tools/typeinference.py:203: [C0301(line-too-long), ] Line too long (231/100)
+csv_tools/typeinference.py:244: [C0326(bad-whitespace), ] Exactly one space required before assignment
+    new_normal_columns= []
+                      ^
+csv_tools/typeinference.py:250: [C0301(line-too-long), ] Line too long (102/100)
+csv_tools/typeinference.py:265: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/typeinference.py:30: [C0103(invalid-name), ] Invalid constant name "NoneType"
+csv_tools/typeinference.py:40: [C0103(invalid-name), normalize_column_type] Invalid argument name "l"
+csv_tools/typeinference.py:58: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:65: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:72: [W0631(undefined-loop-variable), normalize_column_type] Using possibly undefined loop variable 'i'
+csv_tools/typeinference.py:72: [W0631(undefined-loop-variable), normalize_column_type] Using possibly undefined loop variable 'x'
+csv_tools/typeinference.py:80: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:101: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:132: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:154: [C0103(invalid-name), normalize_column_type] Invalid variable name "x"
+csv_tools/typeinference.py:160: [C0103(invalid-name), normalize_column_type] Invalid variable name "d"
+csv_tools/typeinference.py:167: [C0103(invalid-name), normalize_column_type] Invalid variable name "d"
+csv_tools/typeinference.py:174: [C0103(invalid-name), normalize_column_type] Invalid variable name "d"
+csv_tools/typeinference.py:193: [C0103(invalid-name), normalize_column_type] Invalid variable name "v"
+csv_tools/typeinference.py:167: [R0204(redefined-variable-type), normalize_column_type] Redefinition of d type from datetime.datetime to datetime.time
+csv_tools/typeinference.py:40: [R0911(too-many-return-statements), normalize_column_type] Too many return statements (10/6)
+csv_tools/typeinference.py:40: [R0912(too-many-branches), normalize_column_type] Too many branches (54/12)
+csv_tools/typeinference.py:40: [R0915(too-many-statements), normalize_column_type] Too many statements (109/50)
+csv_tools/typeinference.py:223: [R0914(too-many-locals), normalize_table] Too many local variables (17/15)
+csv_tools/typeinference.py:250: [C0103(invalid-name), normalize_table] Invalid variable name "t"
+csv_tools/typeinference.py:250: [C0103(invalid-name), normalize_table] Invalid variable name "c"
+csv_tools/typeinference.py:252: [C0103(invalid-name), normalize_table] Invalid variable name "t"
+csv_tools/typeinference.py:252: [C0103(invalid-name), normalize_table] Invalid variable name "c"
+csv_tools/typeinference.py:256: [C0103(invalid-name), normalize_table] Invalid variable name "e"
+************* Module csv_tools.convert.__init__
+csv_tools/convert/__init__.py:77: [C0304(missing-final-newline), ] Final newline missing
+************* Module csv_tools.convert
+csv_tools/convert/__init__.py:26: [C0103(invalid-name), convert] Invalid argument name "f"
+csv_tools/convert/__init__.py:26: [W0622(redefined-builtin), convert] Redefining built-in 'format'
+csv_tools/convert/__init__.py:26: [W0613(unused-argument), convert] Unused argument 'schema'
+csv_tools/convert/__init__.py:26: [W0613(unused-argument), convert] Unused argument 'key'
+csv_tools/convert/__init__.py:52: [R0911(too-many-return-statements), guess_format] Too many return statements (8/6)
+************* Module csv_tools.convert.bad_csv
+csv_tools/convert/bad_csv.py:42: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/convert/bad_csv.py:28: [C0103(invalid-name), bad_csv] Invalid argument name "f"
+csv_tools/convert/bad_csv.py:37: [C0103(invalid-name), bad_csv] Invalid variable name "o"
+************* Module csv_tools.convert.xlsx
+csv_tools/convert/xlsx.py:33: [C0103(invalid-name), normalize_datetime] Invalid argument name "dt"
+csv_tools/convert/xlsx.py:43: [C0103(invalid-name), normalize_datetime] Invalid variable name "ms"
+csv_tools/convert/xlsx.py:67: [C0103(invalid-name), xlsx] Invalid argument name "f"
+csv_tools/convert/xlsx.py:99: [C0103(invalid-name), xlsx] Invalid variable name "c"
+csv_tools/convert/xlsx.py:117: [E1101(no-member), xlsx] Instance of 'int' has no 'isoformat' member
+csv_tools/convert/xlsx.py:67: [R0912(too-many-branches), xlsx] Too many branches (14/12)
+************* Module csv_tools.services.__init__
+csv_tools/services/__init__.py:19: [C0304(missing-final-newline), ] Final newline missing
+************* Module csv_tools.services.convert_to_csv
+csv_tools/services/convert_to_csv.py:35: [C0301(line-too-long), ] Line too long (157/100)
+csv_tools/services/convert_to_csv.py:36: [C0301(line-too-long), ] Line too long (232/100)
+csv_tools/services/convert_to_csv.py:37: [C0301(line-too-long), ] Line too long (197/100)
+csv_tools/services/convert_to_csv.py:38: [C0301(line-too-long), ] Line too long (109/100)
+csv_tools/services/convert_to_csv.py:38: [C0326(bad-whitespace), ] Exactly one space required after comma
+        self.argparser.add_argument('--sheet', dest='sheet',help='The name of the XLSX sheet to operate on.')
+                                                           ^
+csv_tools/services/convert_to_csv.py:39: [C0301(line-too-long), ] Line too long (150/100)
+csv_tools/services/convert_to_csv.py:51: [C0301(line-too-long), ] Line too long (103/100)
+csv_tools/services/convert_to_csv.py:56: [C0301(line-too-long), ] Line too long (142/100)
+csv_tools/services/convert_to_csv.py:29: [C0111(missing-docstring), ConvertToCSV] Missing class docstring
+csv_tools/services/convert_to_csv.py:89: [C0111(missing-docstring), launch_new_instance] Missing function docstring
+************* Module csv_tools.services.insert_csv
+csv_tools/services/insert_csv.py:46: [C0301(line-too-long), ] Line too long (163/100)
+csv_tools/services/insert_csv.py:50: [C0301(line-too-long), ] Line too long (176/100)
+csv_tools/services/insert_csv.py:51: [C0301(line-too-long), ] Line too long (197/100)
+csv_tools/services/insert_csv.py:52: [C0301(line-too-long), ] Line too long (167/100)
+csv_tools/services/insert_csv.py:53: [C0301(line-too-long), ] Line too long (176/100)
+csv_tools/services/insert_csv.py:54: [C0301(line-too-long), ] Line too long (165/100)
+csv_tools/services/insert_csv.py:55: [C0301(line-too-long), ] Line too long (198/100)
+csv_tools/services/insert_csv.py:56: [C0301(line-too-long), ] Line too long (199/100)
+csv_tools/services/insert_csv.py:57: [C0301(line-too-long), ] Line too long (196/100)
+csv_tools/services/insert_csv.py:58: [C0301(line-too-long), ] Line too long (159/100)
+csv_tools/services/insert_csv.py:59: [C0301(line-too-long), ] Line too long (135/100)
+csv_tools/services/insert_csv.py:60: [C0301(line-too-long), ] Line too long (150/100)
+csv_tools/services/insert_csv.py:61: [C0301(line-too-long), ] Line too long (131/100)
+csv_tools/services/insert_csv.py:61: [C0326(bad-whitespace), ] Exactly one space required after comma
+        self.argparser.add_argument('--db-schema', dest='db_schema',help='Optional name of database schema to create table(s) in.')
+                                                                   ^
+csv_tools/services/insert_csv.py:106: [C0301(line-too-long), ] Line too long (397/100)
+csv_tools/services/insert_csv.py:155: [C0301(line-too-long), ] Line too long (118/100)
+csv_tools/services/insert_csv.py:45: [C0111(missing-docstring), InsertCSV] Missing class docstring
+csv_tools/services/insert_csv.py:63: [R0914(too-many-locals), InsertCSV.main] Too many local variables (21/15)
+csv_tools/services/insert_csv.py:83: [W0702(bare-except), InsertCSV.main] No exception type(s) specified
+csv_tools/services/insert_csv.py:110: [C0103(invalid-name), InsertCSV.main] Invalid variable name "f"
+csv_tools/services/insert_csv.py:148: [E1120(no-value-for-parameter), InsertCSV.main] No value for argument 'dml' in method call
+csv_tools/services/insert_csv.py:163: [C0103(invalid-name), InsertCSV.main] Invalid variable name "q"
+csv_tools/services/insert_csv.py:171: [W0212(protected-access), InsertCSV.main] Access to a protected member _metadata of a client class
+csv_tools/services/insert_csv.py:63: [R0912(too-many-branches), InsertCSV.main] Too many branches (27/12)
+csv_tools/services/insert_csv.py:63: [R0915(too-many-statements), InsertCSV.main] Too many statements (67/50)
+csv_tools/services/insert_csv.py:68: [W0201(attribute-defined-outside-init), InsertCSV.main] Attribute 'input_files' defined outside __init__
+csv_tools/services/insert_csv.py:181: [C0111(missing-docstring), launch_new_instance] Missing function docstring
+************* Module csv_tools.services.look_at_csv
+csv_tools/services/look_at_csv.py:90: [C0325(superfluous-parens), ] Unnecessary parens after 'if' keyword
+csv_tools/services/look_at_csv.py:98: [C0304(missing-final-newline), ] Final newline missing
+csv_tools/services/look_at_csv.py:30: [C0111(missing-docstring), LookAtCSV] Missing class docstring
+csv_tools/services/look_at_csv.py:67: [C0103(invalid-name), LookAtCSV.main] Invalid variable name "v"
+csv_tools/services/look_at_csv.py:83: [C0103(invalid-name), LookAtCSV.main] Invalid variable name "d"
+csv_tools/services/look_at_csv.py:85: [C0103(invalid-name), LookAtCSV.main] Invalid variable name "d"
+csv_tools/services/look_at_csv.py:46: [R0204(redefined-variable-type), LookAtCSV.main] Redefinition of rows type from csv_tools.CSVToolsReader to itertools.chain
+csv_tools/services/look_at_csv.py:93: [C0111(missing-docstring), launch_new_instance] Missing function docstring
+
+
+Report
+======
+1087 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |15     |15         |=          |86.67       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |23     |23         |=          |78.26       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |65     |65         |=          |87.69       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|function |24     |24         |=          |70.83       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    csv_tools (csv_tools.table,csv_tools.convert.xlsx,csv_tools.services.insert_csv,csv_tools.services.look_at_csv,csv_tools.cli)
+      \-cli (csv_tools.table,csv_tools.services.convert_to_csv,csv_tools.services.insert_csv,csv_tools.services.look_at_csv)
+      \-convert (csv_tools.services.convert_to_csv)
+      | \-bad_csv (csv_tools.convert)
+      | \-xlsx (csv_tools.convert)
+      \-exceptions (csv_tools.typeinference,csv_tools.cli)
+      \-headers (csv_tools.table,csv_tools.services.look_at_csv)
+      \-sniffer (csv_tools.table)
+      \-sql (csv_tools.services.insert_csv)
+      \-table (csv_tools.services.insert_csv,csv_tools.convert.bad_csv)
+      \-typeinference (csv_tools.table,csv_tools.convert.xlsx)
+    dateutil 
+      \-parser (csv_tools.typeinference)
+    openpyxl 
+      \-reader 
+        \-excel (csv_tools.convert.xlsx)
+    six (csv_tools.convert.xlsx,csv_tools.services.look_at_csv,csv_tools,csv_tools.cli,csv_tools.table,csv_tools.convert.bad_csv,csv_tools.typeinference,csv_tools.sql)
+    sqlalchemy (csv_tools.sql)
+      \-schema (csv_tools.sql)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+No config file found, using default configuration
+|code      |1182   |56.50 |1182     |=          |
++----------+-------+------+---------+-----------+
+|docstring |378    |18.07 |378      |=          |
++----------+-------+------+---------+-----------+
+|comment   |101    |4.83  |101      |=          |
++----------+-------+------+---------+-----------+
+|empty     |431    |20.60 |431      |=          |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+-------+---------+-----------+
+|                         |now    |previous |difference |
++=========================+=======+=========+===========+
+|nb duplicated lines      |333    |333      |=          |
++-------------------------+-------+---------+-----------+
+|percent duplicated lines |16.149 |16.149   |=          |
++-------------------------+-------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |177    |177      |=          |
++-----------+-------+---------+-----------+
+|refactor   |22     |22       |=          |
++-----------+-------+---------+-----------+
+|warning    |18     |18       |=          |
++-----------+-------+---------+-----------+
+|error      |4      |4        |=          |
++-----------+-------+---------+-----------+
+
+
+
+% errors / warnings by module
+-----------------------------
+
++----------------------------------+------+--------+---------+-----------+
+|module                            |error |warning |refactor |convention |
++==================================+======+========+=========+===========+
+|csv_tools.services.insert_csv     |25.00 |16.67   |13.64    |11.30      |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.sql                     |25.00 |5.56    |0.00     |1.69       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools                         |25.00 |0.00    |9.09     |3.39       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.convert.xlsx            |25.00 |0.00    |4.55     |2.26       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.table                   |0.00  |22.22   |22.73    |12.43      |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.convert.__init__        |0.00  |16.67   |4.55     |1.13       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.typeinference           |0.00  |11.11   |22.73    |14.12      |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.cli                     |0.00  |11.11   |18.18    |38.42      |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.exceptions              |0.00  |11.11   |0.00     |1.69       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.sniffer                 |0.00  |5.56    |0.00     |0.00       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.services.look_at_csv    |0.00  |0.00    |4.55     |3.95       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.services.convert_to_csv |0.00  |0.00    |0.00     |5.65       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.headers                 |0.00  |0.00    |0.00     |1.69       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.convert.bad_csv         |0.00  |0.00    |0.00     |1.69       |
++----------------------------------+------+--------+---------+-----------+
+|csv_tools.services.__init__       |0.00  |0.00    |0.00     |0.56       |
++----------------------------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++-------------------------------+------------+
+|message id                     |occurrences |
++===============================+============+
+|invalid-name                   |77          |
++-------------------------------+------------+
+|line-too-long                  |63          |
++-------------------------------+------------+
+|missing-docstring              |22          |
++-------------------------------+------------+
+|missing-final-newline          |8           |
++-------------------------------+------------+
+|too-many-branches              |5           |
++-------------------------------+------------+
+|redefined-variable-type        |5           |
++-------------------------------+------------+
+|bad-whitespace                 |5           |
++-------------------------------+------------+
+|bare-except                    |4           |
++-------------------------------+------------+
+|unused-argument                |3           |
++-------------------------------+------------+
+|undefined-loop-variable        |3           |
++-------------------------------+------------+
+|too-many-statements            |3           |
++-------------------------------+------------+
+|too-many-locals                |3           |
++-------------------------------+------------+
+|too-many-return-statements     |2           |
++-------------------------------+------------+
+|too-many-arguments             |2           |
++-------------------------------+------------+
+|too-few-public-methods         |2           |
++-------------------------------+------------+
+|super-init-not-called          |2           |
++-------------------------------+------------+
+|protected-access               |2           |
++-------------------------------+------------+
+|no-value-for-parameter         |2           |
++-------------------------------+------------+
+|no-member                      |2           |
++-------------------------------+------------+
+|unused-variable                |1           |
++-------------------------------+------------+
+|superfluous-parens             |1           |
++-------------------------------+------------+
+|redefined-builtin              |1           |
++-------------------------------+------------+
+|dangerous-default-value        |1           |
++-------------------------------+------------+
+|bad-continuation               |1           |
++-------------------------------+------------+
+|attribute-defined-outside-init |1           |
++-------------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.82/10 (previous run: 7.82/10, +0.00)
+
+[Cobertura] Publishing Cobertura coverage report...
+Publishing Cobertura coverage results...
+Cobertura coverage report found.
+Finished: SUCCESS

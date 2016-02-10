@@ -14,6 +14,7 @@
 \usepackage{colortbl}
 \usepackage{footmisc}
 \usepackage{fancyhdr}
+\usepackage{fancyvrb}
 \usepackage{ccicons}
 \usepackage{suffix}
 \usepackage{multirow}
@@ -189,6 +190,24 @@ aboveskip=1ex,
 frame=trbl,
 framesep=.3ex,
 rulecolor=\color{black!40},
+}
+\newcommand{\inputbash}[1]{\lstinputlisting[style=bashstyle, title={\codetitlestyle{Bash code}}, belowcaptionskip=\belowtitleskip]{#1}}
+\lstnewenvironment{bash}[1][]{\lstset{style=bashstyle, title={\codetitlestyle{Bash code}}, belowcaptionskip=\belowtitleskip}}{}
+\lstnewenvironment{csh}[1][]{\lstset{style=bashstyle, title={\codetitlestyle{Csh code}}, belowcaptionskip=\belowtitleskip}}{}%   
+
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}%
+{fontsize=\footnotesize,
+ %
+ frame=lines,  % top and bottom rule only
+ framesep=2em, % separation between frame and text
+ rulecolor=\color{Gray},
+ %
+ label=\fbox{\color{Black}data.txt},
+ labelposition=topline,
+ %
+ commandchars=\|\(\), % escape character and argument delimiters for
+                      % commands within the verbatim
+ commentchar=*        % comment character
 }
 
 \usepackage[
