@@ -20,24 +20,31 @@ Installation
 
 1. Clone this repo::
 
-	git clone https://www.github.com/dmelichar-tgm/csv_tools
+    git clone https://www.github.com/dmelichar-tgm/csv_tools
 
 2. Create a Python virtual environment using virtualenvwrapper (optional, but recommended)::
 
-	mkvirtualenv --python=python3 ~/.virtualenvs/csv_tools
-	source ~/.virtualenvs/csv_tools/bin/activate
+    mkvirtualenv --python=python3 ~/.virtualenvs/csv_tools
+    source ~/.virtualenvs/csv_tools/bin/activate
 
 
 3. Install requirements::
 
-	pip install -r requirements.txt
+    pip install -r requirements.txt
 
 4. Execute the setup.py::
 
-	python setup.py install
+    python setup.py install
 
-Usage
-#####
+
+Usage (GUI)
+###########
+
+tbd.
+
+
+Usage (Terminal)
+################
 
 After a succsesfull installation, you will be able to use the three main services provided by CSV-Tools: **lookat**, **convert**, and **insert** CSVs.
 
@@ -63,21 +70,24 @@ Query with SQL:
 
 Import into PostgreSQL:
 
-	insert --db postgresql://wadmin:password@localhost/wien_wahl  --insert examples/test_data.csv 
+    insert --db postgresql://wadmin:password@localhost/wien_wahl  --insert examples/test_data.csv
 
 Print a CSV:
-	
-	lookat examples/test_data.csv
+
+    lookat examples/test_data.csv
 
 
-Virtual Environement (with Jenkins)
+Virtual Development Environement (with Jenkins)
 ###################################
 
 Go to the vagrant directory and type:
-	
-	vagrant up
 
-This will install and configure the machine. After that the machine will be available at **127.0.0.0:8080**.
+    vagrant up
+
+This will install and configure the machine. After that, Jenkins will be available at **127.0.0.0:8080**.
+You can access `Vagrant <https://www.vagrantup.com/docs/>`_ with the typical commands and use it as needed.
+
+Please note that some modifications may be needed in the *Vagrantfile* and *install.sh* Script - especially the Paths. 
 
 
 Resources and useful links
@@ -93,10 +103,13 @@ Resources and useful links
 - Six: `Documentation <https://pythonhosted.org/six/>`_
 - Jenkins: `Wiki <https://wiki.jenkins-ci.org/display/JENKINS/Home>`_
 - bhfsteve: `Automated python unit testing, code coverage and code quality analysis with Jenkins <http://bhfsteve.blogspot.co.at/2012/04/automated-python-unit-testing-code.html>`_
+- Mark Summerfiled: `Rapid GUI Programming with Python and Qt <https://www.cs.washington.edu/research/projects/urbansim/books/pyqt-book.pdf>`_
+- Qt Wiki: `PySide Binaries MacOSX <https://wiki.qt.io/PySide_Binaries_MacOSX>`_
 
+Aufgabenstellungen 
+##################
 
-Aufgabenstellung #1 (A08 - Python und CSV)
-##########################################
+**#1 (A08 - Python und CSV)**
 
 Wir wollen nun unser Wissen wie Python mit CSV-Dateien umgeht.
 
@@ -108,10 +121,7 @@ Die Aufgabenstellung: Erstellen Sie ein einfaches Beispiel anhand der Wiener Gem
 
 Viel Erfolg!
 
-
-
-Aufgabenstellung #2 (A10 - Continuous Integration)
-##################################################
+**#2 (A10 - Continuous Integration)**
 
 *"Continuous Integration is a software development practice where members of a team integrate their work frequently, usually each person integrates at least daily - leading to multiple integrations per day. Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible. Many teams find that this approach leads to significantly reduced integration problems and allows a team to develop cohesive software more rapidly. This article is a quick overview of Continuous Integration summarizing the technique and its current usage." M.Fowler*
 
@@ -126,3 +136,20 @@ Schreibe fünf Testfälle für dein CSV-Projekt und lass diese mithilfe von Jenk
 - Protokolliere deine Vorgehensweise (inkl. Zeitaufwand, Konfiguration, Probleme) und die Ergebnisse (viele Screenshots!)
 
 Viel Spaß!
+
+**#3 (INSY: GUI-Struktur)**
+
+Erstelle eine GUI-Basis-Struktur lt. `Tafelbild <https://elearning.tgm.ac.at/pluginfile.php/66538/mod_label/intro/20160210_083641.jpg>`_
+
+Erweitere die Menüeinträge mittel QActions (derzeit nur Dummy-Methoden)
+
+Mittels Crtl-Q wird das Programm verlassen (mittels Qt Designer im SIgnal/Slot-Editor festlegen)
+
+Abgabe: 3 Files
+
+.ui-file;
+
+converted .py
+
+ausführbare Klasse, welche das converted .py verwendet und das Fenster anzeigbar macht.
+
