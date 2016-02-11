@@ -25,4 +25,8 @@ Vagrant.configure("2") do |config|
 
   # Install project dependicies
   config.vm.provision :shell, :path => "./install.sh"
+
+  # Since we'll need to run a GUI, forwaring X11 is necessary
+  config.ssh.forward_agent = true
+  config.ssh.forward_x11 = true
 end

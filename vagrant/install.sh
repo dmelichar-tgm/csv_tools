@@ -2,7 +2,7 @@
 
 ### Install required Software dependicies
 sudo apt-get update
-sudo apt-get -y --force-yes install git-core python3 python3-pip python-mock python-nose python-coverage pylint
+sudo apt-get -y --force-yes install git-core python3 python3-pip python-mock python3-nose python3-coverage pylint qtcreator python3-pyqt5 python3-pyside
 
 ### Install and configure PostgreSQL 
 sudo apt-get -y --force-yes install postgresql-9.3 postgresql-contrib-9.3 postgresql-doc-9.3 postgresql-server-dev-9.3

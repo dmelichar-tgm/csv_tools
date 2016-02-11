@@ -10,10 +10,12 @@ CSV-Tools
 Requirements
 ############
 
+It is recommended to use the provided Virtual Development Environment for the entire project. For this, the only requirements you have is a functional **vagrant** installation as well as **XQuartz** if you're on OSX.
+You can set up PyCharm to use the virtual machine's interpreter, see `here <https://www.jetbrains.com/pycharm/help/configuring-remote-python-interpreters.html>`_.
+
 You will need a functional **Python3** installation. Using a `VirtualEnv <http://docs.python-guide.org/en/latest/dev/virtualenvs/>`_ is never wrong.
 
 For the Jenkins part, you'll need a functional Vagrant installation.
-
 
 Installation
 ############
@@ -77,8 +79,8 @@ Print a CSV:
     lookat examples/test_data.csv
 
 
-Virtual Development Environement (with Jenkins)
-###################################
+Virtual Development Environment (with Jenkins)
+##############################################
 
 Go to the vagrant directory and type:
 
@@ -86,6 +88,15 @@ Go to the vagrant directory and type:
 
 This will install and configure the machine. After that, Jenkins will be available at **127.0.0.0:8080**.
 You can access `Vagrant <https://www.vagrantup.com/docs/>`_ with the typical commands and use it as needed.
+
+The entire Vagrantfile is setup in a way which allows for you to only use it and not any interpreters you have on your host.
+In a nutshell, after the Vagrant is initialized and while it's running, connect to it with *vagrant ssh*, then you just have to run the program.
+
+To test if everything is working properly type in the following commands (while in the vagrant directory):
+
+    vagrant ssh                                                             # Should now be connected to the server
+    /usr/bin/python3 /home/vagrant/CSV-Tools/vagrant/HelloWorld-PySide.py   # Should open a 'Hello World' window
+
 
 Please note that some modifications may be needed in the *Vagrantfile* and *install.sh* Script - especially the Paths. 
 
@@ -105,6 +116,8 @@ Resources and useful links
 - bhfsteve: `Automated python unit testing, code coverage and code quality analysis with Jenkins <http://bhfsteve.blogspot.co.at/2012/04/automated-python-unit-testing-code.html>`_
 - Mark Summerfiled: `Rapid GUI Programming with Python and Qt <https://www.cs.washington.edu/research/projects/urbansim/books/pyqt-book.pdf>`_
 - Qt Wiki: `PySide Binaries MacOSX <https://wiki.qt.io/PySide_Binaries_MacOSX>`_
+- Martin (Coderwall): `Run graphical programs within Vagrantboxes <https://coderwall.com/p/ozhfva/run-graphical-programs-within-vagrantboxes>`_
+
 
 Aufgabenstellungen 
 ##################
