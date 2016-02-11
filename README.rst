@@ -13,7 +13,9 @@ Requirements
 It is recommended to use the provided Virtual Development Environment for the entire project. For this, the only requirements you have is a functional **vagrant** installation as well as **XQuartz** if you're on OSX.
 You can set up PyCharm to use the virtual machine's interpreter, see `here <https://www.jetbrains.com/pycharm/help/configuring-remote-python-interpreters.html>`_.
 
-You will need a functional **Python3** installation. Using a `VirtualEnv <http://docs.python-guide.org/en/latest/dev/virtualenvs/>`_ is never wrong.
+However, if you want to run everything locally, see requirements below.
+
+You will need a functional **Python3** installation. Using a `VirtualEnv <http://docs.python-guide.org/en/latest/dev/virtualenvs/>`_ is never wrong. You will also need to install the requirements via pip, see in Installation.
 
 For the Jenkins part, you'll need a functional Vagrant installation.
 
@@ -94,8 +96,10 @@ In a nutshell, after the Vagrant is initialized and while it's running, connect 
 
 To test if everything is working properly type in the following commands (while in the vagrant directory):
 
-    vagrant ssh                                                             # Should now be connected to the server
-    /usr/bin/python3 /home/vagrant/CSV-Tools/vagrant/HelloWorld-PySide.py   # Should open a 'Hello World' window
+    # Connect to the server
+    vagrant ssh
+    # Open a 'Hello World' window
+    /usr/bin/python3 /home/vagrant/CSV-Tools/vagrant/HelloWorld-PySide.py
 
 
 Please note that some modifications may be needed in the *Vagrantfile* and *install.sh* Script - especially the Paths. 
