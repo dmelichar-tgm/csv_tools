@@ -97,8 +97,12 @@ In a nutshell, after the Vagrant is initialized and while it's running, connect 
 To test if everything is working properly type in the following commands (while in the vagrant directory):
 
     # Connect to the server
+    
     vagrant ssh
+    
+    
     # Open a 'Hello World' window
+    
     /usr/bin/python3 /home/vagrant/CSV-Tools/vagrant/HelloWorld-PySide.py
 
 
