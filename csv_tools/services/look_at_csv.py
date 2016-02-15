@@ -37,6 +37,7 @@ class LookAtCSV(CSVToolsUtility):
         rows = CSVToolsReader(self.input_file, **self.reader_kwargs)
 
         # Make a default header row if none exists
+        print(self.args)
         if self.args.no_header_row:
             row = next(rows)
 
