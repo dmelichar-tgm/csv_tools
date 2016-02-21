@@ -15,6 +15,7 @@ This is the implementation of the UI File in Python.
 # sip.setapi('QVariant', 2)
 
 from PySide import QtCore, QtGui
+
 try:
     from csv_tools.gui.helpers.about import AboutWindow
 except:
@@ -45,6 +46,28 @@ class MainWindow(QtGui.QMainWindow):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
         self.tableWidget = QtGui.QTableWidget()
+
+        ### TESTING STUFF AND THINGS
+        ### This basically fills the Table with some values
+        # title = [[0 for x in range(50)] for x in range(50)]
+        # data = [[0 for x in range(50)] for x in range(50)]
+        # colcnt = len(data[0])
+        # rowcnt = len(data)
+        # self.tableWidget = QtGui.QTableWidget(rowcnt, colcnt)
+        #
+        # vheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Vertical)
+        # vheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        # self.tableWidget.setVerticalHeader(vheader)
+        # hheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Horizontal)
+        # hheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        # self.tableWidget.setHorizontalHeader(hheader)
+        # self.tableWidget.setHorizontalHeaderLabels(title)
+        #
+        # for i in range(rowcnt):
+        #     for j in range(colcnt):
+        #         item = QtGui.QTableWidgetItem(str(data[i][j]))
+        #         self.tableWidget.setItem(i, j, item)
+
         self.setCentralWidget(self.tableWidget)
 
         self.createActions()
@@ -161,22 +184,6 @@ class MainWindow(QtGui.QMainWindow):
                 shortcut=QtGui.QKeySequence.Paste,
                 statusTip="Paste the clipboard's contents into the current selection",
                 triggered=self.paste)
-
-        self.boldAct = QtGui.QAction("&Bold", self, checkable=True,
-                shortcut="Ctrl+B", statusTip="Make the text bold",
-                triggered=self.bold)
-
-        boldFont = self.boldAct.font()
-        boldFont.setBold(True)
-        self.boldAct.setFont(boldFont)
-
-        self.italicAct = QtGui.QAction("&Italic", self, checkable=True,
-                shortcut="Ctrl+I", statusTip="Make the text italic",
-                triggered=self.italic)
-
-        italicFont = self.italicAct.font()
-        italicFont.setItalic(True)
-        self.italicAct.setFont(italicFont)
 
         self.aboutAct = QtGui.QAction("&About", self,
                                       statusTip="Show the application's About box",

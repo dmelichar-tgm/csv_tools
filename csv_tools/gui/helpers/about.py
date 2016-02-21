@@ -26,13 +26,14 @@ __maintainer__ = "Daniel Melichar"
 __email__ = "dmelichar@student.tgm.ac.at"
 __status__ = "Production"
 
+readme_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../../README.rst')
 
 class AboutWindow(QtGui.QMainWindow):
     def __init__(self):
         super(AboutWindow, self).__init__()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
-        readme_rst = open('../../../README.rst').read()
+        readme_rst = open(readme_path).read()
         readme_html = publish_parts(readme_rst, writer_name='html')['html_body']
 
         self.about = QtGui.QTextEdit(self)
