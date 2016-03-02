@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """
-*****************
-File description
-*****************
+***********
+GUI-Helpers
+***********
 
-A File description that's a bit longer.
+In this package you can find some modules that help
+build the GUI, like the About Window.
 """
 
 __author__ = "Daniel Melichar"

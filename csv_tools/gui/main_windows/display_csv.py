@@ -7,6 +7,7 @@ Main Window of Application
 **************************
 
 This is the implementation of the UI File in Python.
+
 """
 
 # This is only needed for Python v2 but is harmless for Python v3.
@@ -15,14 +16,18 @@ This is the implementation of the UI File in Python.
 # sip.setapi('QVariant', 2)
 
 from PySide import QtCore, QtGui
+from csv_tools import table
 
 try:
-    from csv_tools.gui.helpers.about import AboutWindow
+    import csv_tools.gui.helpers.about
+    import csv_tools.gui.helpers.files
 except:
     # I have no idea why this works, and the import above doesn't.
     import sys, os
+
     sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../helpers/'))
     from about import AboutWindow
+    import files as FileHelper
 
 __author__ = "Daniel Melichar"
 __copyright__ = "Copyright 2015"
@@ -45,35 +50,31 @@ class MainWindow(QtGui.QMainWindow):
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
-        self.tableWidget = QtGui.QTableWidget()
+        title = [[0 for x in range(10)] for x in range(10)]
+        data = [[0 for x in range(10)] for x in range(10)]
+        colcnt = len(data[0])
+        rowcnt = len(data)
+        self.tableWidget = QtGui.QTableWidget(rowcnt, colcnt)
 
-        ### TESTING STUFF AND THINGS
-        ### This basically fills the Table with some values
-        # title = [[0 for x in range(50)] for x in range(50)]
-        # data = [[0 for x in range(50)] for x in range(50)]
-        # colcnt = len(data[0])
-        # rowcnt = len(data)
-        # self.tableWidget = QtGui.QTableWidget(rowcnt, colcnt)
-        #
-        # vheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Vertical)
-        # vheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
-        # self.tableWidget.setVerticalHeader(vheader)
-        # hheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Horizontal)
-        # hheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
-        # self.tableWidget.setHorizontalHeader(hheader)
-        # self.tableWidget.setHorizontalHeaderLabels(title)
-        #
-        # for i in range(rowcnt):
-        #     for j in range(colcnt):
-        #         item = QtGui.QTableWidgetItem(str(data[i][j]))
-        #         self.tableWidget.setItem(i, j, item)
+        vheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Vertical)
+        vheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget.setVerticalHeader(vheader)
+        hheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Horizontal)
+        hheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget.setHorizontalHeader(hheader)
+        self.tableWidget.setHorizontalHeaderLabels(title)
 
+        for i in range(rowcnt):
+            for j in range(colcnt):
+                item = QtGui.QTableWidgetItem(str(data[i][j]))
+                self.tableWidget.setItem(i, j, item)
+
+        self.tableWidget.itemSelectionChanged.connect(self.setStatusBarMessage)
         self.setCentralWidget(self.tableWidget)
 
         self.createActions()
         self.createMenus()
         self.statusBar()
-        self.setStatusBarMessage(5, 10)
 
         self.setWindowTitle("CSV-Tools")
         self.resize(800, 400)
@@ -110,30 +111,29 @@ class MainWindow(QtGui.QMainWindow):
         self.about.show()
 
     def undo(self):
-        pass # ToDo
+        pass  # ToDo
 
     def redo(self):
-        pass # ToDo
+        pass  # ToDo
 
     def cut(self):
-        pass # ToDo
+        pass  # ToDo
 
     def copy(self):
-        pass # ToDo
+        pass  # ToDo
 
     def paste(self):
-        pass # ToDo
+        pass  # ToDo
 
     def bold(self):
-        pass # ToDo
+        pass  # ToDo
 
     def italic(self):
-        pass # ToDo
+        pass  # ToDo
 
-    def setStatusBarMessage(self, x, y):
-        location = "[{0}|{1}]".format(x, y)
+    def setStatusBarMessage(self):
+        location = "[{0}|{1}]".format(self.tableWidget.currentRow()+1, self.tableWidget.currentColumn()+1)
         self.statusBar().showMessage(location)
-
 
     def createActions(self):
         self.newAct = QtGui.QAction("&New", self,
@@ -163,27 +163,27 @@ class MainWindow(QtGui.QMainWindow):
                                      triggered=QtGui.qApp.closeAllWindows)
 
         self.undoAct = QtGui.QAction("&Undo", self,
-                shortcut=QtGui.QKeySequence.Undo,
-                statusTip="Undo the last operation", triggered=self.undo)
+                                     shortcut=QtGui.QKeySequence.Undo,
+                                     statusTip="Undo the last operation", triggered=self.undo)
 
         self.redoAct = QtGui.QAction("&Redo", self,
-                shortcut=QtGui.QKeySequence.Redo,
-                statusTip="Redo the last operation", triggered=self.redo)
+                                     shortcut=QtGui.QKeySequence.Redo,
+                                     statusTip="Redo the last operation", triggered=self.redo)
 
         self.cutAct = QtGui.QAction("Cu&t", self,
-                shortcut=QtGui.QKeySequence.Cut,
-                statusTip="Cut the current selection's contents to the clipboard",
-                triggered=self.cut)
+                                    shortcut=QtGui.QKeySequence.Cut,
+                                    statusTip="Cut the current selection's contents to the clipboard",
+                                    triggered=self.cut)
 
         self.copyAct = QtGui.QAction("&Copy", self,
-                shortcut=QtGui.QKeySequence.Copy,
-                statusTip="Copy the current selection's contents to the clipboard",
-                triggered=self.copy)
+                                     shortcut=QtGui.QKeySequence.Copy,
+                                     statusTip="Copy the current selection's contents to the clipboard",
+                                     triggered=self.copy)
 
         self.pasteAct = QtGui.QAction("&Paste", self,
-                shortcut=QtGui.QKeySequence.Paste,
-                statusTip="Paste the clipboard's contents into the current selection",
-                triggered=self.paste)
+                                      shortcut=QtGui.QKeySequence.Paste,
+                                      statusTip="Paste the clipboard's contents into the current selection",
+                                      triggered=self.paste)
 
         self.aboutAct = QtGui.QAction("&About", self,
                                       statusTip="Show the application's About box",
@@ -222,26 +222,63 @@ class MainWindow(QtGui.QMainWindow):
         self.helpMenu.addAction(self.aboutQtAct)
 
     def loadFile(self, fileName):
+        fileEnding = fileName.split(".")[-1]
         file = QtCore.QFile(fileName)
-        if not file.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text):
-            QtGui.QMessageBox.warning(self, "CSV-Tools",
-                                      "Cannot read file %s:\n%s." % (fileName, file.errorString()))
+        if not file.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text) or fileEnding != 'csv' :
+            if fileEnding != 'csv':
+                QtGui.QMessageBox.warning(self, "CSV-Tools", "Cannot read file %s:\nYou must select a .csv file." % (fileName))
+            else:
+                QtGui.QMessageBox.warning(self, "CSV-Tools", "Cannot read file %s:\n%s." % (fileName, file.errorString()))
             return
 
-            # instr = QtCore.QTextStream(file)
-            # QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-            # self.textEdit.setPlainText(instr.readAll())
-            # QtGui.QApplication.restoreOverrideCursor()
-            #
-            # self.setCurrentFile(fileName)
-            # self.statusBar().showMessage("File loaded", 2000)
+        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+
+        f = FileHelper.open_input_file(path=fileName)
+        table_name = os.path.splitext(os.path.split(f.name)[1])[0]
+        csv_table = table.Table.from_csv(f, name=table_name)
+        f.close()
+
+        colcnt = len(csv_table.headers())-1
+        rowcnt = csv_table.count_rows()
+        self.tableWidget = QtGui.QTableWidget(rowcnt, colcnt)
+
+        vheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Vertical)
+        vheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget.setVerticalHeader(vheader)
+        hheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Horizontal)
+        hheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
+        self.tableWidget.setHorizontalHeader(hheader)
+        self.headers = [x.strip(' ') for x in csv_table.headers()] # remove spaces
+        self.headers = [x for x in self.headers if x is not None] # remove None
+        self.tableWidget.setHorizontalHeaderLabels(self.headers)
+
+        for i in range(rowcnt):
+            for j in range(colcnt):
+                item = QtGui.QTableWidgetItem(str(csv_table.row(i)[j]))
+                if item.text() != 'None': self.tableWidget.setItem(i, j, item)
+
+        self.tableWidget.itemSelectionChanged.connect(self.setStatusBarMessage)
+        self.setCentralWidget(self.tableWidget)
+        self.repaint()
+        QtGui.QApplication.restoreOverrideCursor()
+        self.setCurrentFile(fileName)
+        self.statusBar().showMessage("File loaded", 2000)
 
     def saveFile(self, fileName):
         file = QtCore.QFile(fileName)
         if not file.open(QtCore.QFile.WriteOnly | QtCore.QFile.Text):
-            QtGui.QMessageBox.warning(self, "CSV-Tools",
-                                      "Cannot write file %s:\n%s." % (fileName, file.errorString()))
+            QtGui.QMessageBox.warning(self, "CSV-Tools", "Cannot write file %s:\n%s." % (fileName, file.errorString()))
             return
+
+        tableDisplay = table.Table(name=file)
+        all_rows = self.tableWidget.rowCount()
+        all_columns = self.tableWidget.columnCount()
+
+        for row in range(0, all_rows):
+            for column in xrange(0, all_columns):
+                tableDisplay.insert(row, self.tableWidget.item(row, column))
+
+
 
             # outstr = QtCore.QTextStream(file)
             # QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
@@ -299,11 +336,14 @@ class MainWindow(QtGui.QMainWindow):
     def strippedName(self, fullFileName):
         return QtCore.QFileInfo(fullFileName).fileName()
 
-
-if __name__ == '__main__':
+def launch_new_instance():
     import sys
 
     app = QtGui.QApplication(sys.argv)
     mainWin = MainWindow()
     mainWin.show()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    launch_new_instance()

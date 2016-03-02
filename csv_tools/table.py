@@ -1,4 +1,4 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -220,6 +220,8 @@ class Table(list):
         # which are not seekable and thus must be buffered
         contents = f.read()
 
+        print('hello')
+
         # snifflimit == 0 means do not sniff
         if snifflimit is None:
             kwargs['dialect'] = sniffer.sniff_dialect(contents)
@@ -232,6 +234,8 @@ class Table(list):
         if no_header_row:
             # Peek at a row to infer column names from
             row = next(rows)
+            print("if")
+            print(row)
 
             headers = make_default_headers(len(row))
             column_ids = parse_column_identifiers(column_ids, headers, zero_based)
@@ -242,6 +246,8 @@ class Table(list):
             rows = itertools.chain([row], rows)
         else:
             headers = next(rows)
+            print("else")
+            print(headers)
 
             if column_ids:
                 column_ids = parse_column_identifiers(column_ids, headers, zero_based)

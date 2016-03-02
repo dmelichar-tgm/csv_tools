@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-*****************
+****************
 File description
-*****************
+****************
 
 A File description that's a bit longer.
 """

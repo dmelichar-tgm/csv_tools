@@ -15,6 +15,7 @@ It basically reads the README and displays it
 # sip.setapi('QVariant', 2)
 
 from PySide import QtCore, QtGui
+import os
 from docutils.core import publish_parts
 
 __author__ = "Daniel Melichar"
@@ -37,6 +38,7 @@ class AboutWindow(QtGui.QMainWindow):
         readme_html = publish_parts(readme_rst, writer_name='html')['html_body']
 
         self.about = QtGui.QTextEdit(self)
+        self.about.setReadOnly(True)
         self.about.setHtml(readme_html)
 
         self.setCentralWidget(self.about)

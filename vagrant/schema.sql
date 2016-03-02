@@ -49,7 +49,7 @@ CREATE TABLE partei (
 -- ####################################################### --
 -- ####################################################### --
 
-CREATE TABLE bezik (
+CREATE TABLE bezirk (
 	nummer INT PRIMARY KEY,
 	name TEXT NOT NULL,
 	wahlkreis_nummer INT NOT NULL REFERENCES wahlkreis(nummer)
@@ -84,9 +84,9 @@ CREATE TABLE kanidatur (
 -- ####################################################### --
 -- ####################################################### --
 
-CREATE TABLE parteistimmen (
-	-- Gesamt Stimmen
-	gstimmen INT NOT NULL,
+CREATE TABLE sprenglstimmen (
+	-- Sprengl Stimmen
+	sstimmen INT NOT NULL,
 	partei_kbez VARCHAR(5) REFERENCES partei(kbez),
 	wahlsprengl_nummer INT REFERENCES wahlsprengl(nummer),
 	PRIMARY KEY (partei_kbez, wahlsprengl_nummer)
@@ -95,5 +95,30 @@ CREATE TABLE parteistimmen (
 -- ####################################################### --
 -- ####################################################### --
 
+CREATE TABLE wahlstimmen (
+	-- Wahl Stimmen
+	gstimmen INT NOT NULL,
+	wahl_termin DATE REFERENCES wahl(termin),
+	partei_kbez VARCHAR(5) REFERENCES partei(kbez),
+	PRIMARY KEY (wahl_termin, partei_kbez)
+);
 
 
+-- ####################################################### --
+-- ####################################################### --
+
+CREATE TABLE hochrechnung (
+	zeitpunkt TIME NOT NULL,
+	wahl_termin DATE REFERENCES wahl(termin),
+	PRIMARY KEY (zeitpunkt, wahl_termin)
+);
+
+-- ####################################################### --
+-- ####################################################### --
+
+CREATE TABLE hochrechnungdaten (
+	prozent INT NOT NULL,
+	zeitpunkt TIME REFERENCES hochrechnung(zeitpunkt),
+	partei_kbez VARCHAR(5) REFERENCES partei(kbez),
+	PRIMARY KEY (zeitpunkt, partei_kbez)
+);

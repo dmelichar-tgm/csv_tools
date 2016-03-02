@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-*****************
-File description
-*****************
+***********************************
+CSV-Tools: Graphical User Interface
+***********************************
 
-A File description that's a bit longer.
 """
 
 __author__ = "Daniel Melichar"
