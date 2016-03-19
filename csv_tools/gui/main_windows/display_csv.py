@@ -41,7 +41,6 @@ __status__ = "Production"
 
 class MainWindow(QtGui.QMainWindow):
     MaxRecentFiles = 5
-    windowList = []
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -50,27 +49,7 @@ class MainWindow(QtGui.QMainWindow):
 
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
-        title = [[0 for x in range(10)] for x in range(10)]
-        data = [[0 for x in range(10)] for x in range(10)]
-        colcnt = len(data[0])
-        rowcnt = len(data)
-        self.tableWidget = QtGui.QTableWidget(rowcnt, colcnt)
-
-        vheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Vertical)
-        vheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
-        self.tableWidget.setVerticalHeader(vheader)
-        hheader = QtGui.QHeaderView(QtCore.Qt.Orientation.Horizontal)
-        hheader.setResizeMode(QtGui.QHeaderView.ResizeToContents)
-        self.tableWidget.setHorizontalHeader(hheader)
-        self.tableWidget.setHorizontalHeaderLabels(title)
-
-        for i in range(rowcnt):
-            for j in range(colcnt):
-                item = QtGui.QTableWidgetItem(str(data[i][j]))
-                self.tableWidget.setItem(i, j, item)
-
-        self.tableWidget.itemSelectionChanged.connect(self.setStatusBarMessage)
-        self.setCentralWidget(self.tableWidget)
+        self.setCentralWidget(QtGui.QTableWidget())
 
         self.createActions()
         self.createMenus()
@@ -82,7 +61,6 @@ class MainWindow(QtGui.QMainWindow):
 
     def newFile(self):
         other = MainWindow()
-        MainWindow.windowList.append(other)
         other.show()
 
     def open(self):
@@ -125,11 +103,17 @@ class MainWindow(QtGui.QMainWindow):
     def paste(self):
         pass  # ToDo
 
-    def bold(self):
+    def new_row(self):
         pass  # ToDo
 
-    def italic(self):
+    def duplicate_row(self):
         pass  # ToDo
+
+    def establish_connection(self):
+        pass # Todo
+
+    def break_connection(self):
+        pass # Todo
 
     def setStatusBarMessage(self):
         location = "[{0}|{1}]".format(self.tableWidget.currentRow()+1, self.tableWidget.currentColumn()+1)
@@ -185,6 +169,22 @@ class MainWindow(QtGui.QMainWindow):
                                       statusTip="Paste the clipboard's contents into the current selection",
                                       triggered=self.paste)
 
+        self.new_row = QtGui.QAction("New Row", self,
+                                     statusTip="Add a new row to the table",
+                                     triggered=self.new_row)
+
+        self.duplicate_row = QtGui.QAction("Duplicate Row", self,
+                                     statusTip="Duplicate a selected row",
+                                     triggered=self.duplicate_row)
+
+        self.establish_connection = QtGui.QAction("Connect to..", self,
+                                     statusTip="Connect to a database",
+                                     triggered=self.establish_connection)
+
+        self.break_connection = QtGui.QAction("Disconnect from..", self,
+                                     statusTip="Disconnect from the current database",
+                                     triggered=self.break_connection)
+
         self.aboutAct = QtGui.QAction("&About", self,
                                       statusTip="Show the application's About box",
                                       triggered=self.about)
@@ -206,14 +206,20 @@ class MainWindow(QtGui.QMainWindow):
         self.fileMenu.addAction(self.exitAct)
         self.updateRecentFileActions()
 
-        self.fileMenu = self.menuBar().addMenu("&Edit")
-        self.fileMenu.addAction(self.undoAct)
-        self.fileMenu.addAction(self.redoAct)
-        self.fileMenu.addSeparator()
-        self.fileMenu.addAction(self.cutAct)
-        self.fileMenu.addAction(self.copyAct)
-        self.fileMenu.addAction(self.pasteAct)
-        self.fileMenu.addSeparator()
+        self.editMenu = self.menuBar().addMenu("&Edit")
+        self.editMenu.addAction(self.undoAct)
+        self.editMenu.addAction(self.redoAct)
+        self.editMenu.addSeparator()
+        self.editMenu.addAction(self.cutAct)
+        self.editMenu.addAction(self.copyAct)
+        self.editMenu.addAction(self.pasteAct)
+        self.editMenu.addSeparator()
+        self.editMenu.addAction(self.new_row)
+        self.editMenu.addAction(self.duplicate_row)
+
+        self.dbMenu = self.menuBar().addMenu("&Database")
+        self.dbMenu.addAction(self.establish_connection)
+        self.dbMenu.addAction(self.break_connection)
 
         self.menuBar().addSeparator()
 
@@ -277,16 +283,6 @@ class MainWindow(QtGui.QMainWindow):
         for row in range(0, all_rows):
             for column in xrange(0, all_columns):
                 tableDisplay.insert(row, self.tableWidget.item(row, column))
-
-
-
-            # outstr = QtCore.QTextStream(file)
-            # QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-            # outstr << self.textEdit.toPlainText()
-            # QtGui.QApplication.restoreOverrideCursor()
-            #
-            # self.setCurrentFile(fileName)
-            # self.statusBar().showMessage("File saved", 2000)
 
     def setCurrentFile(self, fileName):
         self.curFile = fileName

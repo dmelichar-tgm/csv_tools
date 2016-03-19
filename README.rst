@@ -103,7 +103,7 @@ To test if everything is working properly type in the following commands (while 
     vagrant ssh
     
     
-    # Open a 'Hello World' window
+    # Open the 'Hello World' window
     
     /usr/bin/python3 /home/vagrant/CSV-Tools/vagrant/HelloWorld-PySide.py
 
