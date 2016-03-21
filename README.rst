@@ -176,3 +176,29 @@ converted .py
 
 ausführbare Klasse, welche das converted .py verwendet und das Fenster anzeigbar macht.
 
+**#4 UNDO/REDO-FUNKTIONALITÄT**
+
+1 Erstellen Sie folgende Aktionen:
+
+    - Kopieren (einer Zelle)
+    - Einfügen (einer Zelle)
+    - Auschneiden (des Inhalts einer Zelle)
+    - Erzeugen einer neuen Zeile (unterhalb der aktuellen Zelle)
+    - Duplizieren der aktuellen Zeile (inklusive einfügen unterhalb der aktuellen Zelle)
+    - Löschen der aktuellen Zeile
+    - Undo (letzte Aktion rückgängig machen)
+    - Redo (letzte verfügbare Aktion wiederholen)
+
+2. Erstelle Sie eine History aller Kommandos.
+
+3. Verbinden Sie die Aktionen mit dem Menü
+
+4. Einbindung des TableModels
+
+5. Einbinden des Data Access Layer(DAL)
+
+6. Testen Sie die Funktionalität
+
+7. Geben Sie alle notwendigen Pythonfiles (inklusive Verzeichnisstruktur) in einem Archiv (.zip) ab.
+
+Viel Erfolg!

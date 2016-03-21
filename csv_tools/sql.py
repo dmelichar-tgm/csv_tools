@@ -35,9 +35,9 @@ __status__ = "Deployed"
 NoneType = type(None)
 
 DIALECTS = {
-    'mysql': 'mysql.mysqlconnector',
-    'postgresql': 'postgresql.psycopg2',
-    'sqlite': 'sqlite.pysqlite'
+    'mysql': 'mysql+mysqlconnector',
+    'postgresql': 'postgresql+psycopg2',
+    'sqlite': 'sqlite+pysqlite'
 }
 
 NULL_COLUMN_MAX_LENGTH = 32

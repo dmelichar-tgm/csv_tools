@@ -65,7 +65,7 @@ class LazyFile(six.Iterator):
 
 def open_input_file(path):
     """
-    Open the input file specified on the command line.
+    Open the input file
     """
     if six.PY2:
         mode = 'rb'

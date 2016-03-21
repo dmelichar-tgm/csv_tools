@@ -15,6 +15,7 @@ setup(
             'lookat = csv_tools.services.look_at_csv:launch_new_instance',
             'insert = csv_tools.services.insert_csv:launch_new_instance',
             'convert = csv_tools.services.convert_to_csv:launch_new_instance',
+            'csvtools = csv_tools.gui.display_csv:launch_new_instance'
         ]
     }
 )

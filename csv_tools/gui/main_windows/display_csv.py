@@ -17,10 +17,12 @@ This is the implementation of the UI File in Python.
 
 from PySide import QtCore, QtGui
 from csv_tools import table
+from csv_tools import sql
 
 try:
     import csv_tools.gui.helpers.about
     import csv_tools.gui.helpers.files
+    import csv_tools.gui.helpers.dbdialog
 except:
     # I have no idea why this works, and the import above doesn't.
     import sys, os
@@ -28,6 +30,7 @@ except:
     sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../helpers/'))
     from about import AboutWindow
     import files as FileHelper
+    from dbdialog import DatabaseDialog
 
 __author__ = "Daniel Melichar"
 __copyright__ = "Copyright 2015"
@@ -95,25 +98,70 @@ class MainWindow(QtGui.QMainWindow):
         pass  # ToDo
 
     def cut(self):
-        pass  # ToDo
+        current = self.tableWidget.currentItem()
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(current.text())
+        current.setText('')
 
     def copy(self):
-        pass  # ToDo
+        current = self.tableWidget.currentItem()
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(current.text())
 
     def paste(self):
-        pass  # ToDo
+        current = self.tableWidget.currentItem()
+        clipboard = QtGui.QApplication.clipboard()
+        current.setText(clipboard.text())
 
-    def new_row(self):
-        pass  # ToDo
+    def newRow(self):
+        self.tableWidget.insertRow(self.tableWidget.rowCount())
 
-    def duplicate_row(self):
-        pass  # ToDo
+    def duplicateRow(self):
+        currentRow = self.tableWidget.currentRow()
 
-    def establish_connection(self):
-        pass # Todo
+        for column in range(self.tableWidget.columnCount()):
+            str = self.tableWidget.itemAt(currentRow, column).text()
+            print(str, column, currentRow)
 
-    def break_connection(self):
-        pass # Todo
+
+        # print(self.tableWidget.itemAt(9,1).text()) #spo = 27
+
+        # self.tableWidget.insertRow(self.tableWidget.rowCount())
+        #
+        # for item in range(self.tableWidget.columnCount()):
+        #     dCell = self.tableWidget.itemAt(currentRow, item + 1)
+        #     print(dCell.text(), item+1, currentRow)
+        #     nCell = self.tableWidget.itemAt(self.tableWidget.rowCount(), item+1)
+        #     nCell.setText(dCell.text())
+
+
+
+    def establishConnection(self):
+        dlg = DatabaseDialog()
+        if dlg.exec_():
+            QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+            connection_string = '{dialect}://{username}:{password}@{host}:{port}/{database}'.format(**dlg.getAllValues())
+            self.engine, self.metaData = sql.get_connection(connection_string)
+            self.connection = self.engine.connect()
+
+            self.metaData.reflect(self.engine) # Reflection needed since we didn't create the tables with SQLAlchemy
+            print(self.metaData.tables.keys()) # Table Names
+            # Load table and stuff
+            #result = self.connection.execute("select * from partei")
+            #print(result)
+
+
+            self.break_connection.setEnabled(True)
+            self.establish_connection.setDisabled(True)
+            self.statusBar().showMessage("Connected to {dialect} Database: {database}".format(**dlg.getAllValues()))
+            QtGui.QApplication.restoreOverrideCursor()
+
+    def breakConnection(self):
+        self.connection.close()
+        #self.engine.drop()
+        self.break_connection.setDisabled(True)
+        self.establish_connection.setEnabled(True)
+        self.statusBar().showMessage("Disconnected from database")
 
     def setStatusBarMessage(self):
         location = "[{0}|{1}]".format(self.tableWidget.currentRow()+1, self.tableWidget.currentColumn()+1)
@@ -171,19 +219,21 @@ class MainWindow(QtGui.QMainWindow):
 
         self.new_row = QtGui.QAction("New Row", self,
                                      statusTip="Add a new row to the table",
-                                     triggered=self.new_row)
+                                     triggered=self.newRow)
 
         self.duplicate_row = QtGui.QAction("Duplicate Row", self,
                                      statusTip="Duplicate a selected row",
-                                     triggered=self.duplicate_row)
+                                     triggered=self.duplicateRow)
 
         self.establish_connection = QtGui.QAction("Connect to..", self,
                                      statusTip="Connect to a database",
-                                     triggered=self.establish_connection)
+                                     triggered=self.establishConnection)
 
         self.break_connection = QtGui.QAction("Disconnect from..", self,
                                      statusTip="Disconnect from the current database",
-                                     triggered=self.break_connection)
+                                     triggered=self.breakConnection)
+
+        self.break_connection.setDisabled(True)
 
         self.aboutAct = QtGui.QAction("&About", self,
                                       statusTip="Show the application's About box",
@@ -261,7 +311,9 @@ class MainWindow(QtGui.QMainWindow):
         for i in range(rowcnt):
             for j in range(colcnt):
                 item = QtGui.QTableWidgetItem(str(csv_table.row(i)[j]))
-                if item.text() != 'None': self.tableWidget.setItem(i, j, item)
+                if item.text() != 'None':
+                    self.tableWidget.setItem(i, j, item)
+                    self.tableWidget.itemAt(i, j).setText(item.text()) # I have no idea why Qt doesn't do this when using setItem()
 
         self.tableWidget.itemSelectionChanged.connect(self.setStatusBarMessage)
         self.setCentralWidget(self.tableWidget)
