@@ -10,18 +10,20 @@ The main file of the GUI which collects all the necessary pieces, puts
 them together and adds the necessary functionality to them.
 """
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 from PySide.QtGui import QFileDialog, QUndoStack, QApplication
 
 from csv_tools.gui.csv_table_view import Ui_MainWindow
 from csv_tools.gui.csv_table_model import CSVTableModel
 from csv import Sniffer, DictReader, DictWriter
 
+
 try:
     from csv_tools.gui.commands import RemoveRowsCommand, DuplicateRowCommand, InsertRowsCommand, EditCommand
     from csv_tools.gui.commands.delegate import ItemDelegate
     from csv_tools.gui.helpers.database import DatabaseManager
     from csv_tools.gui.helpers.about import AboutWindow
+    from csv_tools.gui.helpers.predictions import PredictionsController
 except:
     # I have no idea why this works, and the import above doesn't.
     import sys, os
@@ -32,6 +34,7 @@ except:
     from commands.delegate import ItemDelegate
     from helpers.database import DatabaseManager
     from helpers.about import AboutWindow
+    from helpers.predictions import PredictionsController
 
 
 __author__ = "Daniel Melichar"
@@ -51,7 +54,6 @@ class CSVTableController(QtGui.QMainWindow):
 
         self.undo_stack = QUndoStack()
         self.statusBar()
-        self.about = AboutWindow()
 
         self.view = Ui_MainWindow()
         self.view.setupUi(self)
@@ -60,6 +62,12 @@ class CSVTableController(QtGui.QMainWindow):
 
         self.filname = None
         self.table_model = CSVTableModel(self, datalist=[], header=[])
+
+        self.view.actionConnect.setEnabled(True)
+        self.view.actionDisconnect.setEnabled(False)
+        self.view.actionInsert.setEnabled(False)
+        self.view.actionReceive.setEnabled(False)
+        self.view.actionCalculate_Predictions.setEnabled(False)
 
         self.view.actionAbout_Qt.triggered.connect(self.about_qt)
         self.view.actionAbout.triggered.connect(self.about)
@@ -131,21 +139,37 @@ class CSVTableController(QtGui.QMainWindow):
         QtGui.qApp.aboutQt()
 
     def about(self):
+        self.about = AboutWindow()
         self.about.show()
 
     def connect(self):
-       pass
+        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        self.db.connect()
+        self.view.actionConnect.setEnabled(False)
+        self.view.actionDisconnect.setEnabled(True)
+        self.view.actionInsert.setEnabled(True)
+        self.view.actionReceive.setEnabled(True)
+        self.view.actionCalculate_Predictions.setEnabled(True)
+        QtGui.QApplication.restoreOverrideCursor()
 
     def disconnect(self):
-        pass
+        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        self.db.disconnect()
+        self.view.actionConnect.setEnabled(True)
+        self.view.actionDisconnect.setEnabled(False)
+        self.view.actionInsert.setEnabled(False)
+        self.view.actionReceive.setEnabled(False)
+        self.view.actionCalculate_Predictions.setEnabled(False)
+        QtGui.QApplication.restoreOverrideCursor()
 
     def insert(self):
         if self.filename is None or len(self.table_model.get_list()) == 0:
             self.statusBar().showMessage("You need to have some data to insert")
             return
+
         try:
             current_list = self.table_model.get_list()
-            self.db.write_from_csv_list(current_list)
+            self.db.write(current_list)
         except Exception as e:
             print(e)
             self.statusBar().showMessage("Error while accessing the database.")
@@ -159,7 +183,8 @@ class CSVTableController(QtGui.QMainWindow):
             self.statusBar().showMessage("Error while accessing the database.")
 
     def calculate_predictions(self):
-        pass
+        datalist, header = self.db.create_results()
+        PredictionsController(datalist, header, "Hochrechnung")
 
     def undo(self):
         self.undo_stack.undo()

@@ -10,7 +10,7 @@ This is currently only set up for MySQL
 """
 
 import datetime
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy.util import OrderedSet
@@ -27,16 +27,29 @@ __status__ = "Deployed"
 DATABASE = "wien_wahl"
 USERNAME = "wadmin"
 PASSWORD = "password"
+HOST = "localhost"
 WAHLTERMIN = "2015-10-11"
 
 class DatabaseManager:
 
     def __init__(self):
-        self.engine = create_engine("mysql+mysqldb://" + USERNAME + ":" + PASSWORD + "@localhost/" + DATABASE + "?charset=utf8")
+        connection_string = 'mysql+mysqldb://{username}:{password}@{host}/{database}'.format(username=USERNAME, password=PASSWORD, host=HOST, database=DATABASE)
+        self.engine = create_engine(connection_string)
+        self.metadata = MetaData()
+        self.metadata.reflect(bind=self.engine)
+
+    def connect(self):
+        self.connection = self.engine.connect()
         base = automap_base()
         base.prepare(self.engine, reflect=True)
         self.session = Session(self.engine)
         self.classes = base.classes
+        self.isConnected = True
+
+    def disconnect(self):
+        self.session.close()
+        self.connection.close()
+        self.isConnected = False
 
     def get_session(self):
         return self.session
@@ -47,14 +60,16 @@ class DatabaseManager:
     def get_class(self, entity):
         return getattr(self.classes, entity)
 
-    def write_from_csv_list(self, datalist):
+    def get_table_names(self):
+        table_names = []
+        for table in self.metadata.sorted_tables:
+            table_names.append(table.name)
+        return table_names
 
-        # TODO: REWRITE
-
+    def write(self, datalist):
         session = self.get_session()
 
-        # delete previous data
-        session.execute('DELETE FROM Stimmabgabe')
+        session.execute("DELETE FROM Stimmabgabe")
         session.execute("DELETE FROM Sprengel")
         session.execute("DELETE FROM Wahl")
 
@@ -91,8 +106,6 @@ class DatabaseManager:
         session.commit()
 
     def load_into_csv_list(self):
-        # TODO: REWRITE
-
         session = self.get_session()
 
         query = "SELECT Wahlkreis.wahlkreisnr, Bezirk.bezirknr, Sprengel.sprengelnr, Sprengel.wahlberechtigte, " \
@@ -103,7 +116,7 @@ class DatabaseManager:
                 "AND Sprengel.termin = '" + WAHLTERMIN + "' " \
                                                               "INNER JOIN Stimmabgabe ON Stimmabgabe.termin = '" + WAHLTERMIN + "' " \
                                                                                                                                      "AND Stimmabgabe.Bezirknr = Bezirk.bezirknr " \
-                                                                                                                            "AND Stimmabgabe.sprengelnr = Sprengel.sprengelnr;"
+                                                                                                                                     "AND Stimmabgabe.sprengelnr = Sprengel.sprengelnr;"
         result = session.execute(query).fetchall()
 
         header = OrderedSet(["WK", "BZ", "SPR", "WBER", "ABG.", "UNG."])
@@ -131,7 +144,7 @@ class DatabaseManager:
     def create_results(self):
 
         termin = WAHLTERMIN
-        zeitpunkt = datetime.now().time().strftime("%H:%M:%S")
+        zeitpunkt = datetime.datetime.now().time().strftime("%H:%M:%S")
 
         connection = self.get_raw_connection()
         cursor = connection.cursor()
