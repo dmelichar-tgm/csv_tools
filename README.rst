@@ -44,9 +44,6 @@ Installation
 Usage (GUI)
 ###########
 
-.. image:: gui-screenshot.png
-   :alt: gui-screenshot
-   :align: center
 
 
 Usage (Terminal)
