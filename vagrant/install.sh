@@ -19,7 +19,7 @@ sudo su postgres -c "psql -c \"CREATE ROLE vagrant SUPERUSER LOGIN PASSWORD 'vag
 # Create database
 sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant wien_wahl"
 # Execute the DDL Script
-sudo psql -U wadmin -h localhost -d wien_wahl -a -f /home/vagrant/CSV-Tools/vagrant/schema.sql
+sudo psql -U wadmin -h localhost -d wien_wahl -a -f /home/vagrant/CSV-Tools/vagrant/database/schema.sql
 
 ### Install Jenkins according to their guide (https://pkg.jenkins-ci.org/debian/)
 wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -

@@ -113,11 +113,13 @@ class Table(list):
     """
     A normalized data table and inferred annotations (nullable, etc.).
     """
-    def __init__(self, columns=[], name='new_table'):
+    def __init__(self, columns=None, name='new_table'):
         """
         Generic constructor. You should normally use a from_* method to create a Table.
         """
         list.__init__(self, columns)
+        if columns is None:
+            columns = []
         self.name = name
 
     def __str__(self):
@@ -293,7 +295,7 @@ class Table(list):
             for c in self:
                 # Stringify datetimes, dates, and times
                 if c.type in [datetime.datetime, datetime.date, datetime.time]:
-                    out_columns.append([six.text_type(v.isoformat()) if v != None else None for v in c])
+                    out_columns.append([six.text_type(v.isoformat()) if v is not None else None for v in c])
                 else:
                     out_columns.append(c)
 

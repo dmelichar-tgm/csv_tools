@@ -10,12 +10,18 @@ The main file of the GUI which collects all the necessary pieces, puts
 them together and adds the necessary functionality to them.
 """
 
+import csv
+import os
+import sys
+
 from PySide import QtGui, QtCore
 from PySide.QtGui import QFileDialog, QUndoStack, QApplication
 
 from csv_tools.gui.csv_table_view import Ui_MainWindow
 from csv_tools.gui.csv_table_model import CSVTableModel
-from csv import Sniffer, DictReader, DictWriter
+
+import numpy
+from matplotlib import pyplot as plt
 
 
 try:
@@ -23,7 +29,6 @@ try:
     from csv_tools.gui.commands.delegate import ItemDelegate
     from csv_tools.gui.helpers.database import DatabaseManager
     from csv_tools.gui.helpers.about import AboutWindow
-    from csv_tools.gui.helpers.predictions import PredictionsController
 except:
     # I have no idea why this works, and the import above doesn't.
     import sys, os
@@ -34,7 +39,6 @@ except:
     from commands.delegate import ItemDelegate
     from helpers.database import DatabaseManager
     from helpers.about import AboutWindow
-    from helpers.predictions import PredictionsController
 
 
 __author__ = "Daniel Melichar"
@@ -45,6 +49,13 @@ __version__ = "1.0"
 __maintainer__ = "Daniel Melichar"
 __email__ = "dmelichar@student.tgm.ac.at"
 __status__ = "Deployed"
+
+DATABASE = "wien_wahl"
+USERNAME = "wadmin"
+PASSWORD = "password"
+HOST = "localhost"
+WAHLTERMIN = "2015-10-11"
+MANDATE = 100
 
 class CSVTableController(QtGui.QMainWindow):
 
@@ -60,7 +71,7 @@ class CSVTableController(QtGui.QMainWindow):
         self.view.tableView.setSortingEnabled(False)
         self.view.tableView.setItemDelegate(ItemDelegate(self.undo_stack, self.set_undo_redo_text))
 
-        self.filname = None
+        self.filename = None
         self.table_model = CSVTableModel(self, datalist=[], header=[])
 
         self.view.actionConnect.setEnabled(True)
@@ -88,11 +99,7 @@ class CSVTableController(QtGui.QMainWindow):
         self.view.actionSave.triggered.connect(self.save)
         self.view.actionSave_as.triggered.connect(self.save_as)
 
-        try:
-            self.db = DatabaseManager()
-        except Exception as e:
-            print(e)
-            self.statusBar().showMessage("Error while trying to establish a connection to the database")
+        self.db = None
 
     def show_window(self):
         self.setEnabled(True)
@@ -144,22 +151,39 @@ class CSVTableController(QtGui.QMainWindow):
 
     def connect(self):
         QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        self.db.connect()
-        self.view.actionConnect.setEnabled(False)
-        self.view.actionDisconnect.setEnabled(True)
-        self.view.actionInsert.setEnabled(True)
-        self.view.actionReceive.setEnabled(True)
-        self.view.actionCalculate_Predictions.setEnabled(True)
+
+        connection_string = 'mysql+mysqldb://{username}:{password}@{host}/{database}'.format(username=USERNAME,
+                                                                                             password=PASSWORD,
+                                                                                             host=HOST,
+                                                                                             database=DATABASE)
+        try:
+            if self.db is None:
+                self.db = DatabaseManager(connectionstring=connection_string, electiondate="2015-10-11")
+                self.statusBar().showMessage("Successfully connected to database")
+                self.view.actionConnect.setEnabled(False)
+                self.view.actionDisconnect.setEnabled(True)
+                self.view.actionInsert.setEnabled(True)
+                self.view.actionReceive.setEnabled(True)
+                self.view.actionCalculate_Predictions.setEnabled(True)
+        except:
+            QtGui.QMessageBox.critical(self, "Connection Error",  "Error connecting to Database:\n" + sys.exc_info()[0], QMessageBox.Close)
+
         QtGui.QApplication.restoreOverrideCursor()
 
     def disconnect(self):
         QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        self.db.disconnect()
-        self.view.actionConnect.setEnabled(True)
-        self.view.actionDisconnect.setEnabled(False)
-        self.view.actionInsert.setEnabled(False)
-        self.view.actionReceive.setEnabled(False)
-        self.view.actionCalculate_Predictions.setEnabled(False)
+
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+            self.view.actionConnect.setEnabled(True)
+            self.view.actionDisconnect.setEnabled(False)
+            self.view.actionInsert.setEnabled(False)
+            self.view.actionReceive.setEnabled(False)
+            self.view.actionCalculate_Predictions.setEnabled(False)
+            self.statusBar().showMessage("Successfully disconnected from database")
+
+
         QtGui.QApplication.restoreOverrideCursor()
 
     def insert(self):
@@ -176,15 +200,31 @@ class CSVTableController(QtGui.QMainWindow):
 
     def receive(self):
         try:
-            datalist, header = self.db.load_into_csv_list()
-            self.update_table_model(datalist, header)
+            data = self.db.load()
+            self.table_model.set_list(data)
+            self.update_table_model(self.table_model.get_list(), self.table_model.get_header())
         except Exception as e:
             print(e)
             self.statusBar().showMessage("Error while accessing the database.")
 
     def calculate_predictions(self):
-        datalist, header = self.db.create_results()
-        PredictionsController(datalist, header, "Hochrechnung")
+        """
+        Cudos an Rene Hollander
+        """
+        projection_data = self.db.create_projection()
+        print("Hochrechnung:")
+        for key, value in projection_data.items():
+            print(key + ": " + str(value))
+        print("\n")
+        ind = numpy.arange(len(projection_data))
+        width = 0.5
+        plt.bar(ind, list(projection_data.values()), width, color='r')
+        plt.ylabel('%')
+        plt.xlabel('Parteien')
+        plt.title('Wien Wahl Hochrechnung')
+        plt.xticks(ind + width / 2, list(projection_data.keys()))
+        plt.yticks(numpy.arange(0, 61, 5))
+        plt.show()
 
     def undo(self):
         self.undo_stack.undo()
@@ -258,73 +298,70 @@ class CSVTableController(QtGui.QMainWindow):
                                    "first column")
 
     def new(self):
-        self.filename = None
-        self.table_model.set_list([], [])
+        if self.filename is not None:
+            save = self.show_new_file_dialog()
+            if(save):
+                self.save()
+                self.filename = None
+                self.table_model.set_list([], [])
+            else:
+                self.filename = None
+                self.table_model.set_list([], [])
+        else:
+            self.filename = None
+            self.table_model.set_list([], [])
+
+    def show_append_override_dialog(self):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setWindowTitle("Append or Override")
+        msgBox.setText("Append or override the current entries?")
+        msgBox.addButton("Append", QtGui.QMessageBox.YesRole)
+        msgBox.addButton("Override", QtGui.QMessageBox.NoRole)
+        return msgBox.exec_()
+
+    def show_new_file_dialog(self):
+        msgBox = QtGui.QMessageBox()
+        msgBox.setWindowTitle("New file")
+        msgBox.setText("Do you want to save first?")
+        msgBox.addButton("Yes", QtGui.QMessageBox.YesRole)
+        msgBox.addButton("No", QtGui.QMessageBox.NoRole)
+        return msgBox.exec_()
 
     def open(self):
-        filename = QFileDialog.getOpenFileName(self, caption="Open CSV-File", filter="CSV-File (*.csv)")[0]
-        if len(filename) > 0:
-            self.filename = filename
-            datalist, header = FileManager.read(self.filename)
-            self.update_table_model(datalist, header)
+        try:
+            fileName = QFileDialog.getOpenFileName(self, self.tr("Open CSV File"), os.getcwd(),
+                                                   self.tr("CSV Files (*.csv)"))[0]
+            if fileName is not None and fileName is not "":
+                append_or_override = False
+                if self.filename is not None:
+                    append_or_override = self.show_append_override_dialog()
+                self.filename = fileName
+                self.table_model.open(self.filename, clear=append_or_override)
+                self.undo_stack.clear()
+                self.set_undo_redo_text()
+                self.update_table_model(self.table_model.get_list(), self.table_model.get_header())
+        except FileNotFoundError:
+            QtGui.QMessageBox.critical(self, "Read Error",
+                                 "Error reading CSV File:\nFile \"" + self.filename + "\" not found!",
+                                 QtGui.QMessageBox.Close)
+        except csv.Error:
+            QtGui.QMessageBox.critical(self, "Read Error", "Error reading CSV File:\n File is not an valid CSV File!",
+                                 QtGui.QMessageBox.Close)
+        except:
+            QtGui.QMessageBox.critical(self, "Read Error", "Error reading CSV File:\nAn unknown Error occured!",
+                                 QtGui.QMessageBox.Close)
+            raise
 
     def save(self):
-        if self.filename is not None:
-            FileManager.write(self.filename, self.table_model.get_list())
+        if self.filename is not None and self.filename is not "":
+            self.table_model.save(self.filename)
         else:
-            self.save_as()
+            fileName = QFileDialog.getSaveFileName(self, caption="Save CSV File", dir=os.getcwd(),
+                                                   filter="CSV Files (*.csv)")[0]
+            if fileName is not None and fileName is not "":
+                self.table_model.save(fileName)
 
     def save_as(self):
-        filename = QFileDialog.getSaveFileName(self, caption="Save CSV-File", dir=self.filename, filter="CSV-File (*.csv)")[0]
-        if len(filename) > 0:
-            self.filename = filename
-            self.save()
-
-
-class FileManager:
-    @staticmethod
-    def read(filename):
-
-        with open(filename, "r") as csvfile:
-
-            sniffer = Sniffer()
-            sample = csvfile.read(4096)
-            dialect = sniffer.sniff(sample, delimiters=[';', ','])
-
-            if sniffer.has_header(sample):
-                # file has header
-                pass
-
-            csvfile.seek(0)
-
-            lines_reader = DictReader(csvfile, dialect=dialect)
-
-            lines = []
-            for line in lines_reader:
-                lines.append(line)
-
-            return lines, lines_reader.fieldnames
-
-    @staticmethod
-    def write(filename, lines, delimiter=';'):
-
-        with open(filename, 'w') as csvfile:
-
-            if len(lines) == 0:
-                return
-
-            fieldnames = list(lines[0].keys())
-            writer = DictWriter(csvfile, delimiter=delimiter, fieldnames=fieldnames)
-            writer.writerow(dict((fn, fn) for fn in fieldnames))
-
-            for line in lines:
-                writer.writerow(line)
-
-
-# TODO: TEMPORARY, REMOVE ONCE DEPLOYED
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    controller = CSVTableController()
-    controller.show_window()
-    sys.exit(app.exec_())
+        fileName = QFileDialog.getSaveFileName(self, caption="Save CSV File", dir=os.getcwd(), filter="CSV Files (*.csv)")[0]
+        if fileName is not None and fileName is not "":
+            self.table_model.save(fileName)

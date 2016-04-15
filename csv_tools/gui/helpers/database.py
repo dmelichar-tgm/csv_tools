@@ -10,6 +10,7 @@ This is currently only set up for MySQL
 """
 
 import datetime
+
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -24,145 +25,136 @@ __maintainer__ = "Daniel Melichar"
 __email__ = "dmelichar@student.tgm.ac.at"
 __status__ = "Deployed"
 
-DATABASE = "wien_wahl"
-USERNAME = "wadmin"
-PASSWORD = "password"
-HOST = "localhost"
-WAHLTERMIN = "2015-10-11"
-
 class DatabaseManager:
-
-    def __init__(self):
-        connection_string = 'mysql+mysqldb://{username}:{password}@{host}/{database}'.format(username=USERNAME, password=PASSWORD, host=HOST, database=DATABASE)
-        self.engine = create_engine(connection_string)
-        self.metadata = MetaData()
-        self.metadata.reflect(bind=self.engine)
-
-    def connect(self):
-        self.connection = self.engine.connect()
-        base = automap_base()
-        base.prepare(self.engine, reflect=True)
+    def __init__(self, connectionstring, electiondate):
+        self.electiondate = electiondate
+        self.engine = create_engine(connectionstring)
+        self.conn = self.engine.connect()
         self.session = Session(self.engine)
-        self.classes = base.classes
-        self.isConnected = True
 
-    def disconnect(self):
-        self.session.close()
-        self.connection.close()
-        self.isConnected = False
+        self.Base = automap_base()
+        self.Base.prepare(self.engine, reflect=True)
+        self.Election = self.Base.classes.election
+        self.Constituency = self.Base.classes.constituency
+        self.District = self.Base.classes.district
+        self.JudicalDistrict = self.Base.classes.judicaldistrict
+        self.Party = self.Base.classes.party
+        self.Candidacy = self.Base.classes.candidacy
+        self.Votes = self.Base.classes.votes
+        self.TotalVotes = self.Base.classes.totalvotes
+        self.Projection = self.Base.classes.projection
+        self.ProjectionResult = self.Base.classes.projectionresult
 
-    def get_session(self):
-        return self.session
+        self.enr = first(self.session.query(self.Election.nr).filter(self.Election.dt == self.electiondate).all())
+        if self.enr is None:
+            raise Exception("Invalid election date")
+        else:
+            self.enr = self.enr[0]
 
-    def get_raw_connection(self):
-        return self.engine.raw_connection()
+    def close(self):
+        self.conn.close()
+        self.engine.dispose()
 
-    def get_class(self, entity):
-        return getattr(self.classes, entity)
+    def write(self, data):
+        self.session.query(self.ProjectionResult).filter(self.ProjectionResult.enr == self.enr).delete(
+            synchronize_session=False)
+        self.session.query(self.Projection).filter(self.Projection.enr == self.enr).delete(synchronize_session=False)
+        self.session.query(self.TotalVotes).filter(self.TotalVotes.enr == self.enr).delete(synchronize_session=False)
+        self.session.query(self.Votes).filter(self.Votes.enr == self.enr).delete(synchronize_session=False)
+        self.session.query(self.JudicalDistrict).filter(self.JudicalDistrict.enr == self.enr).delete(
+            synchronize_session=False)
 
-    def get_table_names(self):
-        table_names = []
-        for table in self.metadata.sorted_tables:
-            table_names.append(table.name)
-        return table_names
+        parties = {}
+        for key in data[0].keys():
+            if key not in ["SPR", "BZ", "WBER", "ABG", "UNG", "T", "WV", "WK"]:
+                parties[key] = self.session.query(self.Party.nr).filter(self.Party.abbr == key).first()[0]
 
-    def write(self, datalist):
-        session = self.get_session()
+        districts = []
+        votes = []
 
-        session.execute("DELETE FROM Stimmabgabe")
-        session.execute("DELETE FROM Sprengel")
-        session.execute("DELETE FROM Wahl")
+        for line in data:
+            districts.append(self.JudicalDistrict(
+                enr=self.enr,
+                dnr=int(line["BZ"]),
+                nr=int(line["SPR"]),
+                electivecnt=int(line["WBER"]),
+                invalidcnt=int(line["UNG"]),
+                votecnt=int(line["ABG"])
+            ))
+            for party, pnr in parties.items():
+                votes.append(self.Votes(
+                    enr=self.enr,
+                    dnr=int(line["BZ"]),
+                    jdnr=int(line["SPR"]),
+                    pnr=pnr,
+                    cnt=int(line[party])
+                ))
 
-        Wahl = self.get_class("Wahl")
-        wahl = Wahl(termin=WAHLTERMIN, mandate=100)
-        session.add(wahl)
+        self.session.bulk_save_objects(districts)
+        self.session.bulk_save_objects(votes)
+        self.session.commit()
 
-        Sprengel = self.get_class("Sprengel")
-        Stimmabgabe = self.get_class("Stimmabgabe")
+    def load(self):
 
-        parties = []
-        for key in datalist[0].keys():
-            if key not in ["SPR", "BZ", "WBER", "ABG.", "UNG.", "T", "WV", "WK"]:
-                parties.append(key)
+        header = OrderedSet(["WK", "BZ", "SPR", "WBER", "ABG", "UNG"])
+        parties = {}
+        for party in self.session.query(self.Party).all():
+            parties[party.nr] = party.abbr
+            header.add(party.abbr)
 
-        for line in datalist:
-            sprengel = Sprengel(sprengelnr=int(line["SPR"]),
-                                bezirknr=int(line["BZ"]),
-                                termin=wahl.termin,
-                                wahlberechtigte=int(line["WBER"]),
-                                abgegebene=int(line["ABG."]),
-                                ungueltige=int(line["UNG."]),
-                                )
-            session.add(sprengel)
-            for party in parties:
-                stimmabgabe = Stimmabgabe(sprengelnr=int(line["SPR"]),
-                                          bezirknr=int(line["BZ"]),
-                                          termin=wahl.termin,
-                                          abkuerzung=party,
-                                          anzahl=int(line[party])
-                                          )
-                session.add(stimmabgabe)
+        query = "SELECT constituency.nr AS cnr, district.nr AS dnr, judicaldistrict.nr AS jdnr, judicaldistrict.electivecnt, " \
+                "judicaldistrict.votecnt, judicaldistrict.invalidcnt, votes.pnr, votes.cnt " \
+                "FROM constituency " \
+                "INNER JOIN district ON constituency.nr = district.cnr " \
+                "INNER JOIN judicaldistrict ON district.nr = judicaldistrict.dnr " \
+                "AND judicaldistrict.enr = '" + str(self.enr) + "' " \
+                                                                "INNER JOIN votes ON votes.enr = '" + str(
+            self.enr) + "' " \
+                        "AND votes.dnr = district.nr " \
+                        "AND votes.jdnr = judicaldistrict.nr;"
+        result = self.session.execute(query)
 
-        session.commit()
+        data = {}
+        for row in result:
+            key = str(row["cnr"]) + str(row["dnr"]) + str(row["jdnr"])
+            if key not in data:
+                data[key] = {
+                    "WK": row["cnr"],
+                    "BZ": row["dnr"],
+                    "SPR": row["jdnr"],
+                    "WBER": row["electivecnt"],
+                    "ABG": row["votecnt"],
+                    "UNG": row["invalidcnt"],
+                    "T": 4,
+                    "WV": 1,
+                }
+            data[key][parties[row["pnr"]]] = row["cnt"]
 
-    def load_into_csv_list(self):
-        session = self.get_session()
+        return list(data.values())
 
-        query = "SELECT Wahlkreis.wahlkreisnr, Bezirk.bezirknr, Sprengel.sprengelnr, Sprengel.wahlberechtigte, " \
-                "Sprengel.abgegebene, Sprengel.ungueltige, Stimmabgabe.abkuerzung, Stimmabgabe.anzahl " \
-                "FROM Wahlkreis " \
-                "INNER JOIN Bezirk ON Wahlkreis.wahlkreisnr = Bezirk.wahlkreisnr " \
-                "INNER JOIN Sprengel ON Bezirk.bezirknr = Sprengel.bezirknr " \
-                "AND Sprengel.termin = '" + WAHLTERMIN + "' " \
-                                                              "INNER JOIN Stimmabgabe ON Stimmabgabe.termin = '" + WAHLTERMIN + "' " \
-                                                                                                                                     "AND Stimmabgabe.Bezirknr = Bezirk.bezirknr " \
-                                                                                                                                     "AND Stimmabgabe.sprengelnr = Sprengel.sprengelnr;"
-        result = session.execute(query).fetchall()
+    def create_projection(self):
+        """
+        Cudos an Rene Hollander
+        """
+        ts = datetime.datetime.now().time().strftime("%H:%M:%S")
 
-        header = OrderedSet(["WK", "BZ", "SPR", "WBER", "ABG.", "UNG."])
-        datalist = []
-        line = {}
-        first_party = None
-        for i in range(0, len(result)):
-            current_party = result[i]["abkuerzung"]
-            if first_party is None or current_party == first_party:
-                if line:
-                    datalist.append(line)
-                line = {}
-                first_party = current_party
-                line["WK"] = result[i]["wahlkreisnr"]
-                line["BZ"] = result[i]["bezirknr"]
-                line["SPR"] = result[i]["sprengelnr"]
-                line["WBER"] = result[i]["wahlberechtigte"]
-                line["ABG."] = result[i]["abgegebene"]
-                line["UNG."] = result[i]["ungueltige"]
-            line[current_party] = result[i]["anzahl"]
-            header.add(current_party)
-
-        return datalist, list(header)
-
-    def create_results(self):
-
-        termin = WAHLTERMIN
-        zeitpunkt = datetime.datetime.now().time().strftime("%H:%M:%S")
-
-        connection = self.get_raw_connection()
+        connection = self.engine.raw_connection()
         cursor = connection.cursor()
-        cursor.callproc("erzeugeHochrechnung", [termin, zeitpunkt])
+        cursor.callproc("create_projection", [self.enr, ts])
         cursor.close()
         connection.commit()
+        self.session.commit()
 
-        session = self.get_session()
-        session.commit()
-        query = "SELECT * FROM HRErgebnis WHERE termin = '" + termin + "' AND zeitpunkt = '" + zeitpunkt + "'"
-        result = session.execute(query).fetchall()
+        result = self.session.query(self.Party.abbr, self.ProjectionResult.percentage) \
+            .select_from(self.Party).join(self.ProjectionResult, self.Party.nr == self.ProjectionResult.pnr) \
+            .filter(self.ProjectionResult.enr == self.enr, self.ProjectionResult.ts == ts) \
+            .all()
+        data = {}
+        for row in result:
+            data[row.abbr] = float(row.percentage)
+        return data
 
-        line = {}
-        header = []
-        datalist = []
-        for i in range(0, len(result)):
-            line[result[i]["abkuerzung"]] = result[i]["prozent"]
-            header.append(result[i]["abkuerzung"])
-        datalist.append(line)
-
-        return datalist, header
+def first(the_iterable, condition=lambda x: True):
+    for i in the_iterable:
+        if condition(i):
+            return i

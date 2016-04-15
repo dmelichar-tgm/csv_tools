@@ -25,7 +25,3 @@ def launch_new_instance():
     controller = CSVTableController()
     controller.show_window()
     sys.exit(app.exec_())
-
-# TODO: TEMPORARY, REMOVE ONCE DEPLOYED
-if __name__ == "__main__":
-    launch_new_instance()

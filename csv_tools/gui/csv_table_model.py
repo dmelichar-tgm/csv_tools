@@ -10,9 +10,12 @@ This is the Model that is being used for the GUI.
 It holds all the functions and operations that you can
 do with the Table.
 """
+import csv
+
 from PySide import QtCore
 
 from PySide.QtCore import QAbstractTableModel, SIGNAL, QModelIndex, Qt
+from collections import Iterable
 
 __author__ = "Daniel Melichar"
 __copyright__ = "Copyright 2015"
@@ -30,10 +33,13 @@ class CSVTableModel(QAbstractTableModel):
         self.list = []
         self.set_list(datalist, header)
 
-    def set_list(self, datalist, header):
+    def set_list(self, datalist, header=None):
         self.emit(SIGNAL("layoutToBeChanged()"))
         self.list = datalist
-        self.header = header
+        if header is None:
+            self.get_header()
+        else:
+            self.header = header
         self.emit(SIGNAL("layoutChanged()"))
 
     def get_list(self):
@@ -44,6 +50,26 @@ class CSVTableModel(QAbstractTableModel):
 
     def rowCount(self, parent):
         return len(self.list)
+
+    def open(self, path, clear=True):
+        with open(path) as file:
+            reader = CSVReader(file)
+            if clear:
+                self.list.clear()
+            reader.collect(self.list)
+        self.generate_headers()
+        self.reset()
+
+    def generate_headers(self):
+        if len(self.list) > 0:
+            self.header = []
+            for key in self.list[0]:
+                self.header.append(key)
+
+    def save(self, path):
+        with open(path, "w") as file:
+            writer = CSVWriter(file)
+            writer.writeAll(self.list)
 
     def columnCount(self, parent):
         return len(self.header)
@@ -97,3 +123,62 @@ class CSVTableModel(QAbstractTableModel):
 
     def flags(self, index):
         return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+
+class CSVReader(Iterable):
+    def __iter__(self):
+        dialect = csv.Sniffer().sniff(self.file.read(1024))
+        self.file.seek(0)
+        reader = csv.DictReader(self.file, dialect=dialect)
+        for row in reader:
+            newrow = {}
+            for key, value in row.items():
+                if key.strip() is not "":
+                    newrow[key.strip()] = value
+            yield newrow
+
+    def collect(self, list=None):
+        if list is None:
+            list = []
+        for item in self:
+            list.append(item)
+        return list
+
+    def __init__(self, file):
+        if file is None or not hasattr(file, 'read'):
+            raise Exception("invalid file")
+        self.file = file
+
+
+    @staticmethod
+    def write(filename, lines, delimiter=';'):
+
+        with open(filename, 'w') as csvfile:
+
+            if len(lines) == 0:
+                return
+
+            fieldnames = list(lines[0].keys())
+            writer = csv.DictWriter(csvfile, delimiter=delimiter, fieldnames=fieldnames)
+            writer.writerow(dict((fn, fn) for fn in fieldnames))
+
+            for line in lines:
+                writer.writerow(line)
+
+class CSVWriter():
+    def __init__(self, file):
+        if file is None or not hasattr(file, 'write'):
+            raise Exception("invalid file")
+        self.file = file
+        self.dictwriter = None
+
+    def write(self, row):
+        if not self.dictwriter:
+            fieldnames = list(row.keys())
+            self.dictwriter = csv.DictWriter(self.file, delimiter=";", fieldnames=fieldnames)
+            self.dictwriter.writerow(dict((fn, fn) for fn in fieldnames))
+
+        self.dictwriter.writerow(row)
+
+    def writeAll(self, rows):
+        for row in rows:
+            self.write(row)
